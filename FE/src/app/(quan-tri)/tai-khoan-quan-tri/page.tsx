@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { goiApi } from '@/lib/api';
 import { TEN_VAI, MO_TA_VAI, type VaiTro } from '@/lib/vai-tro';
+import { dinhDangNgayGio } from '@/lib/dinh-dang';
 
 export const metadata: Metadata = { title: 'Tài khoản quản trị' };
 
@@ -12,17 +13,6 @@ interface TaiKhoan {
   dangHoatDong: boolean;
   lanDangNhapCuoi: string | null;
   createdAt: string;
-}
-
-function dinhDangNgay(gia_tri: string | null): string {
-  if (!gia_tri) return 'Chưa đăng nhập';
-  return new Intl.DateTimeFormat('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(gia_tri));
 }
 
 export default async function TrangTaiKhoanQuanTri() {
@@ -99,7 +89,9 @@ export default async function TrangTaiKhoanQuanTri() {
                     {tk.dangHoatDong ? 'Đang hoạt động' : 'Đã vô hiệu hoá'}
                   </span>
                 </td>
-                <td className="so">{dinhDangNgay(tk.lanDangNhapCuoi)}</td>
+                <td className="so">
+                  {tk.lanDangNhapCuoi ? dinhDangNgayGio(tk.lanDangNhapCuoi) : 'Chưa đăng nhập'}
+                </td>
               </tr>
             ))}
           </tbody>

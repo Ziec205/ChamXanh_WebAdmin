@@ -574,3 +574,124 @@ code {
   background: var(--canh-bao-nen);
   color: var(--canh-bao);
 }
+
+/* ============================================================
+   Biểu mẫu dùng chung (thử gợi ý, thêm/sửa cây, khảo sát, cấu hình)
+   ============================================================ */
+.luoi-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--k4);
+  margin-bottom: var(--k4);
+}
+
+.nhom-lua-chon {
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-vua);
+  padding: var(--k3) var(--k4) var(--k4);
+  margin: 0 0 var(--k4);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--k4);
+  align-items: center;
+}
+.nhom-lua-chon legend {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muc-phu);
+  padding: 0 6px;
+}
+.lua-chon-don {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--muc);
+  cursor: pointer;
+  min-height: 32px;
+}
+.lua-chon-don input[type='radio'],
+.lua-chon-don input[type='checkbox'] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--xanh-dam);
+  cursor: pointer;
+}
+
+/* ---------- Trang thử gợi ý ---------- */
+.form-thu-goi-y { margin-top: var(--k5); }
+
+.tom-tat-goi-y {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, auto)) 1fr;
+  gap: var(--k5);
+  align-items: start;
+  margin: var(--k6) 0 var(--k5);
+}
+.gia-tri-noi-bat {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--xanh-dam);
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+.danh-sach-trong-so {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+.chip-trong-so {
+  font-family: var(--chu-so);
+  font-size: 11.5px;
+  background: var(--mat-phu);
+  color: var(--muc-phu);
+  padding: 3px 9px;
+  border-radius: var(--bo-tron);
+  white-space: nowrap;
+}
+
+.tieu-de-ket-qua {
+  margin: var(--k6) 0 var(--k4);
+  color: var(--xanh-dam);
+}
+
+.luoi-the-cay {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--k4);
+}
+.the-cay-goi-y { display: flex; flex-direction: column; gap: 8px; }
+.dau-the-cay {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.thu-hang {
+  font-family: var(--chu-so);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muc-mo);
+}
+.diem-so {
+  font-family: var(--chu-so);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--xanh-dam);
+  background: var(--xanh-nen);
+  padding: 3px 10px;
+  border-radius: var(--bo-tron);
+}
+.the-cay-goi-y h3 { margin: 0; font-size: 17px; }
+.giai-thich-cay {
+  font-size: 13px;
+  color: var(--muc-phu);
+  line-height: 1.5;
+}
+.danh-sach-ly-do {
+  margin: 4px 0 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  color: var(--muc-mo);
+}
+.danh-sach-ly-do li { margin-bottom: 3px; }

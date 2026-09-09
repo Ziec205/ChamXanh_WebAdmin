@@ -34,6 +34,7 @@ export const MENU: { nhom: string; muc: MucMenu[] }[] = [
     nhom: 'Nội dung',
     muc: [
       { duongDan: '/cay-trong', nhan: 'Cây trồng', vaiDuocPhep: ['admin', 'content'] },
+      { duongDan: '/thu-goi-y', nhan: 'Thử gợi ý', vaiDuocPhep: ['admin', 'content'] },
       { duongDan: '/khao-sat', nhan: 'Khảo sát nhập môn', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
       { duongDan: '/kham-pha', nhan: 'Khám phá', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
       { duongDan: '/trang-gioi-thieu', nhan: 'Trang giới thiệu', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
