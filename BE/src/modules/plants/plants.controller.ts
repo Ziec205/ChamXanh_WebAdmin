@@ -2,7 +2,8 @@ import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlantsService } from './plants.service';
 import { QueryPlantDto } from './dto/query-plant.dto';
-import { Plant } from './schemas/plant.schema';
+import { CreatePlantDto } from './dto/create-plant.dto';
+import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AdminRole } from '../admin-users/schemas/admin-user.schema';
 import { CurrentUser, type AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
@@ -34,7 +35,7 @@ export class PlantsController {
   @Post()
   @Roles(AdminRole.Admin, AdminRole.Content)
   @ApiOperation({ summary: 'Thêm loài cây mới' })
-  taoMoi(@Body() du_lieu: Partial<Plant>, @CurrentUser() nguoiDung: AuthenticatedUser) {
+  taoMoi(@Body() du_lieu: CreatePlantDto, @CurrentUser() nguoiDung: AuthenticatedUser) {
     return this.service.taoMoi(du_lieu, nguoiDung);
   }
 
@@ -43,7 +44,7 @@ export class PlantsController {
   @ApiOperation({ summary: 'Cập nhật một loài cây' })
   capNhat(
     @Param('ma') ma: string,
-    @Body() du_lieu: Partial<Plant>,
+    @Body() du_lieu: UpdatePlantDto,
     @CurrentUser() nguoiDung: AuthenticatedUser,
   ) {
     return this.service.capNhat(ma, du_lieu, nguoiDung);

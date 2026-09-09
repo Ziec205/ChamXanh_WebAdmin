@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { Plant, PlantDocument } from './schemas/plant.schema';
 import { QueryPlantDto } from './dto/query-plant.dto';
+import { CreatePlantDto } from './dto/create-plant.dto';
+import { UpdatePlantDto } from './dto/update-plant.dto';
 import type { CayDeChamDiem } from '../goi-y/cham-diem';
 import { NhatKyService } from '../nhat-ky/nhat-ky.service';
 import type { AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
@@ -42,7 +44,7 @@ export class PlantsService {
     return cay;
   }
 
-  async taoMoi(du_lieu: Partial<Plant>, nguoiDung: AuthenticatedUser) {
+  async taoMoi(du_lieu: CreatePlantDto, nguoiDung: AuthenticatedUser) {
     if (await this.model.exists({ ma: du_lieu.ma })) {
       throw new ConflictException(`Mã "${du_lieu.ma}" đã tồn tại.`);
     }
@@ -59,7 +61,7 @@ export class PlantsService {
     return cay;
   }
 
-  async capNhat(ma: string, du_lieu: Partial<Plant>, nguoiDung: AuthenticatedUser) {
+  async capNhat(ma: string, du_lieu: UpdatePlantDto, nguoiDung: AuthenticatedUser) {
     // Mã là khoá liên kết với trongXenDuocVoi của loài khác — đổi là đứt tham chiếu.
     delete du_lieu.ma;
 
