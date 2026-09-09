@@ -8,6 +8,9 @@ import { validateEnv } from './config/env.validation';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminUsersModule } from './modules/admin-users/admin-users.module';
 import { HealthModule } from './modules/health/health.module';
+import { PlantsModule } from './modules/plants/plants.module';
+import { KhaoSatModule } from './modules/khao-sat/khao-sat.module';
+import { GoiYModule } from './modules/goi-y/goi-y.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -39,6 +42,9 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     AuthModule,
     AdminUsersModule,
     HealthModule,
+    PlantsModule,
+    KhaoSatModule,
+    GoiYModule,
   ],
   providers: [
     // Thứ tự quan trọng: chặn tần suất → xác thực → phân quyền.

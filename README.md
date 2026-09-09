@@ -56,6 +56,18 @@ npm run dev
 
 Mở `http://localhost:3000` và đăng nhập bằng tài khoản vừa tạo ở bước seed.
 
+### 3. Nhập dữ liệu cây
+
+```bash
+cd BE
+npm run nhap:cay -- --thu   # soát tệp Excel trước
+npm run nhap:cay            # ghi 24 loài mẫu vào cơ sở dữ liệu
+```
+
+Đội nội dung sửa `Document/du-lieu-cay-trong.xlsx` rồi chạy lại lệnh này. Loài đã có sẽ được cập nhật theo cột `ma`, loài mới thì thêm vào. Script không bao giờ xoá loài — muốn ẩn thì tắt cờ `dangHienThi` trên Web Admin.
+
+> Chế độ `--thu` không cần MongoDB lẫn tệp `.env`, nên đội nội dung soát được bảng tính mà không cần cấu hình gì.
+
 ---
 
 ## Cách xác thực hoạt động
@@ -99,6 +111,9 @@ Trong `BE/`:
 | `npm run typecheck` | Kiểm kiểu dữ liệu |
 | `npm test` | Kiểm thử đơn vị |
 | `npm run seed:admin` | Tạo tài khoản quản trị đầu tiên |
+| `npm run nhap:cay` | Nhập dữ liệu cây từ `Document/du-lieu-cay-trong.xlsx` |
+| `npm run nhap:cay -- --thu` | Chỉ soát tệp Excel, không ghi vào cơ sở dữ liệu |
+| `npm run test:e2e` | Kiểm thử đầu cuối trên MongoDB trong bộ nhớ |
 
 Trong `FE/`:
 
