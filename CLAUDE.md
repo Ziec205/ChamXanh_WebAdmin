@@ -80,12 +80,75 @@ Chưa làm: mua tài khoản Apple / Google Developer, tên miền.
 
 ```bash
 cd ChamXanh_WebAdmin/BE && npm install && cp .env.example .env
-# điền MONGODB_URI và hai chuỗi JWT khác nhau, mỗi chuỗi ≥ 32 ký tự
-npm run seed:admin && npm run dev      # cổng 3001
+# điền MONGODB_URI và hai chuỗi JWT khác nhau, mỗi chuỗi ≥ 32 ký tự:
+#   node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"
+npm run seed:admin && npm run nhap:cay && npm run dev   # cổng 3001
 
 cd ../FE && npm install && cp .env.example .env.local
-npm run dev                             # cổng 3000
+npm run dev                                              # cổng 3000
 ```
+
+API ở `http://localhost:3001/api/v1`, Swagger ở `http://localhost:3001/api/docs`.
+
+### Lệnh kiểm chứng — chạy TRƯỚC mỗi lần commit, tất cả phải xanh
+
+```bash
+# BE
+npx tsc --noEmit && npx jest && npx jest --config ./test/jest-e2e.json --runInBand && npx nest build
+# FE
+npx tsc --noEmit && npx next lint && npx next build
+```
+
+Kiểm thử đầu cuối tự dựng MongoDB trong bộ nhớ (`test/global-setup.ts`), **không cần** `.env`
+lẫn cơ sở dữ liệu thật. `npm run nhap:cay -- --thu` cũng chạy được mà không cần cấu hình gì.
+
+---
+
+## Bản đồ mã nguồn
+
+Ở đâu tìm gì trong `ChamXanh_WebAdmin/`:
+
+| Việc cần làm | Tệp |
+|---|---|
+| Thuật toán chấm điểm gợi ý (hàm thuần) | `BE/src/modules/goi-y/cham-diem.ts` |
+| Suy ra mức sáng từ vị trí + hướng | `BE/src/modules/goi-y/suy-ra-the.ts` |
+| Sinh lịch chăm sóc (hàm thuần) | `BE/src/modules/lich-cham-soc/sinh-lich.ts` |
+| Mọi enum dùng chung (mức sáng, nhóm cây, mệnh…) | `BE/src/common/constants/cay-trong.const.ts` |
+| Bộ câu hỏi khảo sát mặc định | `BE/src/modules/khao-sat/du-lieu/cau-hoi-mac-dinh.ts` |
+| Nhập dữ liệu từ Excel | `BE/src/scripts/nhap-cay-trong.ts` |
+| Hệ thiết kế (màu, chữ, component) | `FE/src/app/globals.css` |
+| Khai báo menu và quyền theo vai | `FE/src/lib/vai-tro.ts` |
+| Gọi API từ phía server Next.js | `FE/src/lib/api.ts` |
+
+**Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
+được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
+vào service.
+
+### Quy ước API
+
+- Tiền tố: `api/v1`. Phản hồi **luôn** được bọc bởi interceptor toàn cục:
+  - Thành công: `{ thanhCong: true, duLieu: <kết quả> }`
+  - Lỗi: `{ thanhCong: false, maLoi, thongBao, duongDan, thoiDiem }`
+  - ⚠️ Trong kiểm thử **đừng** đăng ký lại filter/interceptor — `AppModule` đã đăng ký toàn cục,
+    đăng ký lần nữa sẽ bọc phản hồi hai lớp (`duLieu.duLieu`). Đã từng mắc lỗi này.
+- Mặc định **mọi endpoint yêu cầu đăng nhập**. Mở công khai phải đánh dấu `@Public()`.
+- Phân quyền: `@Roles(AdminRole.Admin)` ở cấp controller hoặc từng route.
+- **Endpoint nào sửa dữ liệu đều phải ghi `NhatKyService.ghi()`** kèm giá trị trước và sau.
+- Web Admin dùng mẫu BFF: token nằm trong cookie `httpOnly` tên `cx_access` và `cx_refresh`,
+  do Route Handler `FE/src/app/api/auth/*` đặt. Trình duyệt không bao giờ chạm vào token.
+
+### Endpoint đã có
+
+| Nhóm | Đường dẫn |
+|---|---|
+| Xác thực | `POST auth/dang-nhap` · `auth/lam-moi` · `auth/dang-xuat` · `auth/doi-mat-khau` · `GET auth/toi` |
+| Tài khoản quản trị | `GET/POST admin-users` · `PATCH admin-users/:id/vo-hieu-hoa` · `/kich-hoat` |
+| Cây trồng | `GET cay-trong` · `cay-trong/thong-ke` · `cay-trong/:ma` · `POST cay-trong` · `PATCH cay-trong/:ma` |
+| Khảo sát | `GET khao-sat/cau-hoi` · `/tat-ca` · `PATCH khao-sat/cau-hoi/:khoa` · `POST /nap-mac-dinh` |
+| Gợi ý | `POST goi-y` |
+| Cấu hình | `GET cau-hinh` · `PATCH cau-hinh` |
+| Nhật ký | `GET nhat-ky` |
+| Sức khoẻ | `GET health` (công khai) |
 
 ---
 
