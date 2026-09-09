@@ -13,6 +13,9 @@ import { KhaoSatModule } from './modules/khao-sat/khao-sat.module';
 import { GoiYModule } from './modules/goi-y/goi-y.module';
 import { NhatKyModule } from './modules/nhat-ky/nhat-ky.module';
 import { CauHinhModule } from './modules/cau-hinh/cau-hinh.module';
+import { LienKetTiepThiModule } from './modules/lien-ket-tiep-thi/lien-ket-tiep-thi.module';
+import { KhamPhaModule } from './modules/kham-pha/kham-pha.module';
+import { TrangGioiThieuModule } from './modules/trang-gioi-thieu/trang-gioi-thieu.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -50,6 +53,9 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     PlantsModule,
     KhaoSatModule,
     GoiYModule,
+    LienKetTiepThiModule,
+    KhamPhaModule,
+    TrangGioiThieuModule,
   ],
   providers: [
     // Thứ tự quan trọng: chặn tần suất → xác thực → phân quyền.
