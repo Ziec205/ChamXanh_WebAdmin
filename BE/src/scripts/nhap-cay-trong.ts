@@ -14,6 +14,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as ExcelJS from 'exceljs';
 import { resolve } from 'node:path';
+import { existsSync } from 'node:fs';
 import { Plant, PlantDocument } from '../modules/plants/schemas/plant.schema';
 import {
   CONG_DUNG,
@@ -23,7 +24,16 @@ import {
   NHOM_CAY,
 } from '../common/constants/cay-trong.const';
 
-const DUONG_DAN_MAC_DINH = resolve(__dirname, '../../../../Document/du-lieu-cay-trong.xlsx');
+/**
+ * Tìm tệp Excel ở cả hai bố cục:
+ *  - máy phát triển: ChamXanh_Project/Document/
+ *  - clone lẻ repo WebAdmin: ChamXanh_WebAdmin/Document/
+ */
+const UNG_VIEN = [
+  resolve(__dirname, '../../../Document/du-lieu-cay-trong.xlsx'),
+  resolve(__dirname, '../../../../Document/du-lieu-cay-trong.xlsx'),
+];
+const DUONG_DAN_MAC_DINH = UNG_VIEN.find((d) => existsSync(d)) ?? UNG_VIEN[0];
 
 interface LoiDong {
   dong: number;

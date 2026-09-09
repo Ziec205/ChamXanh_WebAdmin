@@ -1,0 +1,982 @@
+<title>Đặc tả Chạm Xanh</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Bitter:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap">
+
+<style>
+:root{
+  --ground:#F6F7F3;
+  --surface:#FFFFFF;
+  --surface-2:#EDF0E8;
+  --ink:#17251A;
+  --ink-soft:#5A6B5C;
+  --ink-faint:#8B9A8C;
+  --line:#DCE2D6;
+  --line-strong:#BFCAB6;
+  --leaf:#5F9631;
+  --leaf-wash:#EBF3E1;
+  --forest:#24462A;
+  --flag:#B23A25;
+  --flag-wash:#F8E9E5;
+  --warn:#946012;
+  --warn-wash:#F7EEDC;
+  --ok:#3F7A42;
+  --ok-wash:#E6F0E4;
+  --code-bg:#EEF1EA;
+
+  --f-display:"Bitter",Georgia,"Times New Roman",serif;
+  --f-body:"Be Vietnam Pro","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+
+  --measure:68ch;
+  --pad:clamp(18px,4vw,44px);
+}
+
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#111510;
+    --surface:#191F18;
+    --surface-2:#212821;
+    --ink:#E7EDE4;
+    --ink-soft:#A3B0A2;
+    --ink-faint:#778577;
+    --line:#2C352B;
+    --line-strong:#3D493C;
+    --leaf:#8CC556;
+    --leaf-wash:#1D2A16;
+    --forest:#A8CE93;
+    --flag:#E8836B;
+    --flag-wash:#2C1A15;
+    --warn:#D9A648;
+    --warn-wash:#2A2213;
+    --ok:#7FB77E;
+    --ok-wash:#18251A;
+    --code-bg:#1E241D;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#111510;
+  --surface:#191F18;
+  --surface-2:#212821;
+  --ink:#E7EDE4;
+  --ink-soft:#A3B0A2;
+  --ink-faint:#778577;
+  --line:#2C352B;
+  --line-strong:#3D493C;
+  --leaf:#8CC556;
+  --leaf-wash:#1D2A16;
+  --forest:#A8CE93;
+  --flag:#E8836B;
+  --flag-wash:#2C1A15;
+  --warn:#D9A648;
+  --warn-wash:#2A2213;
+  --ok:#7FB77E;
+  --ok-wash:#18251A;
+  --code-bg:#1E241D;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:15.5px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--pad) 96px}
+
+/* ---------- masthead ---------- */
+.mast{padding:clamp(40px,7vw,76px) 0 30px;border-bottom:2px solid var(--forest)}
+.eyebrow{
+  font-family:var(--f-mono);font-size:11.5px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.eyebrow span:not(:last-child)::after{content:"·";margin-left:10px;color:var(--ink-faint)}
+h1{
+  font-family:var(--f-display);font-weight:800;
+  font-size:clamp(34px,6.2vw,60px);line-height:1.04;
+  letter-spacing:-.02em;margin:16px 0 14px;text-wrap:balance;color:var(--forest);
+}
+.dek{font-size:clamp(16px,2vw,18.5px);color:var(--ink-soft);max-width:62ch;margin:0}
+
+.factbar{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  margin-top:30px;border-radius:3px;overflow:hidden;
+}
+.fact{background:var(--surface);padding:14px 16px}
+.fact dt{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);margin:0 0 5px}
+.fact dd{margin:0;font-weight:600;font-size:14.5px;font-variant-numeric:tabular-nums}
+
+/* ---------- nav ---------- */
+.jump{
+  position:sticky;top:0;z-index:20;background:var(--ground);
+  border-bottom:1px solid var(--line);margin-bottom:8px;
+  display:flex;gap:2px;overflow-x:auto;padding:9px 0;scrollbar-width:thin;
+}
+.jump a{
+  font-family:var(--f-mono);font-size:11.5px;font-weight:600;letter-spacing:.05em;
+  color:var(--ink-soft);text-decoration:none;white-space:nowrap;
+  padding:5px 11px;border-radius:2px;
+}
+.jump a:hover{background:var(--leaf-wash);color:var(--forest)}
+.jump a:focus-visible{outline:2px solid var(--leaf);outline-offset:1px}
+
+/* ---------- sections ---------- */
+section{padding-top:52px;scroll-margin-top:56px}
+h2{
+  font-family:var(--f-display);font-weight:700;font-size:clamp(22px,3.2vw,29px);
+  line-height:1.18;letter-spacing:-.012em;margin:0 0 6px;color:var(--forest);text-wrap:balance;
+}
+.sublede{color:var(--ink-soft);margin:0 0 26px;max-width:var(--measure)}
+h3{
+  font-family:var(--f-body);font-weight:700;font-size:16px;letter-spacing:-.005em;
+  margin:30px 0 10px;color:var(--ink);
+}
+p{margin:0 0 14px;max-width:var(--measure)}
+a{color:var(--leaf)}
+strong{font-weight:600;color:var(--ink)}
+code{
+  font-family:var(--f-mono);font-size:.86em;background:var(--code-bg);
+  padding:1.5px 5px;border-radius:2px;color:var(--forest);
+}
+
+/* ---------- architecture ---------- */
+.arch{display:flex;flex-direction:column;align-items:center;gap:0;margin:8px 0 6px}
+.tier{width:100%;display:grid;gap:12px}
+.tier.two{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.node{
+  background:var(--surface);border:1px solid var(--line-strong);
+  border-radius:4px;padding:14px 16px;
+}
+.node.hub{border-color:var(--leaf);border-width:2px;background:var(--leaf-wash)}
+.node.data{border-style:dashed}
+.node h4{margin:0 0 4px;font-family:var(--f-body);font-weight:700;font-size:14.5px;color:var(--ink)}
+.node p{margin:0;font-size:12.8px;color:var(--ink-soft);max-width:none;line-height:1.5}
+.node .tag{
+  font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--leaf);display:block;margin-bottom:6px;font-weight:600;
+}
+.link{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0;color:var(--ink-faint)}
+.link i{display:block;width:1px;height:14px;background:var(--line-strong)}
+.link span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em}
+
+/* ---------- tables ---------- */
+.tblwrap{overflow-x:auto;margin:6px 0 4px;border:1px solid var(--line);border-radius:3px}
+table{border-collapse:collapse;width:100%;font-size:13.8px;background:var(--surface)}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{
+  font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-faint);font-weight:600;background:var(--surface-2);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num,th.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.fld{font-family:var(--f-mono);font-size:12.4px;color:var(--forest);white-space:nowrap}
+
+/* ---------- scope ---------- */
+.scope{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.scope > div{border:1px solid var(--line);border-radius:3px;background:var(--surface);padding:16px 18px}
+.scope .in{border-left:3px solid var(--ok)}
+.scope .out{border-left:3px solid var(--ink-faint)}
+.scope h3{margin:0 0 10px}
+.scope ul{margin:0;padding-left:18px}
+.scope li{margin-bottom:6px;font-size:14px}
+.scope li::marker{color:var(--ink-faint)}
+.scope .out li{color:var(--ink-soft)}
+
+/* ---------- screen map ---------- */
+.tabs{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:12px}
+.tab{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:14px 16px}
+.tab header{
+  display:flex;align-items:baseline;gap:8px;margin-bottom:9px;
+  padding-bottom:8px;border-bottom:1px solid var(--line);
+}
+.tab header b{font-size:14.5px;font-weight:700}
+.tab header em{
+  font-family:var(--f-mono);font-style:normal;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--leaf);
+}
+.tab ol{margin:0;padding-left:17px;font-size:13.4px;color:var(--ink-soft)}
+.tab ol li{margin-bottom:4px}
+.tab ol li::marker{font-family:var(--f-mono);font-size:11px;color:var(--ink-faint)}
+.tab ol li b{color:var(--ink);font-weight:600}
+
+/* ---------- schema groups ---------- */
+.groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:12px}
+.grp{background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:14px 16px}
+.grp > b{
+  display:block;font-size:11px;font-family:var(--f-mono);letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:9px;
+}
+.grp dl{margin:0}
+.grp dt{font-family:var(--f-mono);font-size:12.6px;font-weight:600;color:var(--forest);margin-top:9px}
+.grp dt:first-child{margin-top:0}
+.grp dd{margin:1px 0 0;font-size:12.7px;color:var(--ink-soft);line-height:1.45}
+
+/* ---------- risks ---------- */
+.risk{display:grid;grid-template-columns:auto 1fr;gap:0 15px;align-items:start;
+  padding:14px 0;border-bottom:1px solid var(--line)}
+.risk:last-of-type{border-bottom:none}
+.pill{
+  font-family:var(--f-mono);font-size:9.5px;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;padding:3px 8px;border-radius:2px;white-space:nowrap;margin-top:2px;
+}
+.pill.blk{background:var(--flag-wash);color:var(--flag)}
+.pill.att{background:var(--warn-wash);color:var(--warn)}
+.pill.wch{background:var(--ok-wash);color:var(--ok)}
+.risk b{display:block;font-size:14.5px;margin-bottom:3px}
+.risk p{margin:0;font-size:13.6px;color:var(--ink-soft);max-width:62ch}
+
+/* ---------- phases ---------- */
+.ph{
+  background:var(--surface);border:1px solid var(--line);border-radius:3px;
+  border-left:3px solid var(--leaf);padding:16px 18px;margin-bottom:11px;
+}
+.ph > header{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:9px}
+.ph .no{
+  font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--leaf);
+  letter-spacing:.06em;
+}
+.ph h3{margin:0;font-size:16.5px}
+.ph .span{
+  font-family:var(--f-mono);font-size:10.5px;color:var(--ink-faint);
+  letter-spacing:.06em;margin-left:auto;white-space:nowrap;
+}
+.ph ul{margin:0 0 11px;padding-left:18px;font-size:14px}
+.ph li{margin-bottom:4px}
+.ph li::marker{color:var(--ink-faint)}
+.gate{
+  display:flex;gap:9px;align-items:baseline;padding-top:10px;
+  border-top:1px dashed var(--line-strong);font-size:13.4px;color:var(--ink-soft);
+}
+.gate b{
+  font-family:var(--f-mono);font-size:9.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ok);white-space:nowrap;
+}
+
+/* ---------- checklist ---------- */
+.check{margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.check li{
+  display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:baseline;
+  padding:11px 0;border-bottom:1px solid var(--line);
+}
+.check .box{
+  width:13px;height:13px;border:1.5px solid var(--line-strong);border-radius:2px;
+  display:inline-block;flex:none;position:relative;top:2px;
+}
+.check .due{font-family:var(--f-mono);font-size:11px;color:var(--ink-faint);
+  letter-spacing:.05em;white-space:nowrap}
+.check b{font-weight:600}
+.check small{display:block;color:var(--ink-soft);font-size:12.8px;line-height:1.45}
+
+/* ---------- callout ---------- */
+.note{
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--leaf);
+  border-radius:3px;padding:14px 18px;margin:18px 0;
+}
+.note b{display:block;margin-bottom:4px;font-size:14px}
+.note p{margin:0;font-size:13.8px;color:var(--ink-soft)}
+.note.warn{border-left-color:var(--warn)}
+
+footer{
+  margin-top:60px;padding-top:22px;border-top:1px solid var(--line);
+  font-size:12.6px;color:var(--ink-faint);display:flex;justify-content:space-between;
+  gap:14px;flex-wrap:wrap;font-family:var(--f-mono);letter-spacing:.03em;
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="eyebrow">
+    <span>Đặc tả kỹ thuật</span><span>v2.0</span><span>09.09.2026</span><span>1 lập trình viên</span>
+  </div>
+  <h1>Chạm Xanh</h1>
+  <p class="dek">Ứng dụng chăm sóc cây trồng cho người trẻ đô thị, kèm trợ lý AI và chợ vật tư. Tài liệu này chốt phạm vi, kiến trúc, bộ dữ liệu cây, thuật toán gợi ý và trình tự dựng sản phẩm.</p>
+
+  <dl class="factbar">
+    <div class="fact"><dt>Mobile</dt><dd>React Native · Expo</dd></div>
+    <div class="fact"><dt>Backend</dt><dd>NestJS · Render</dd></div>
+    <div class="fact"><dt>Web</dt><dd>Next.js · Vercel</dd></div>
+    <div class="fact"><dt>Dữ liệu</dt><dd>MongoDB Atlas</dd></div>
+    <div class="fact"><dt>Ưu tiên</dt><dd>Chất lượng</dd></div>
+  </dl>
+</header>
+
+<nav class="jump">
+  <a href="#kientruc">Kiến trúc</a>
+  <a href="#phamvi">Phạm vi</a>
+  <a href="#dieuhuong">Điều hướng</a>
+  <a href="#manhinh">Màn hình</a>
+  <a href="#caytrong">Bộ dữ liệu cây</a>
+  <a href="#goiy">Thuật toán gợi ý</a>
+  <a href="#dulieu">Cấu trúc dữ liệu</a>
+  <a href="#ai">Trợ lý AI</a>
+  <a href="#cho">Chợ Vật Tư</a>
+  <a href="#doanhthu">Doanh thu</a>
+  <a href="#chatluong">Chuẩn chất lượng</a>
+  <a href="#lotrinh">Trình tự dựng</a>
+  <a href="#ruiro">Rủi ro</a>
+  <a href="#store">Lên store</a>
+  <a href="#ngay">Làm ngay</a>
+</nav>
+
+<!-- ============ KIẾN TRÚC ============ -->
+<section id="kientruc">
+  <h2>Kiến trúc hệ thống</h2>
+  <p class="sublede">Một API duy nhất phục vụ mọi client. Web giới thiệu đọc thẳng cơ sở dữ liệu qua tầng server của Next.js thay vì dựng một backend thứ hai — bỏ được một dịch vụ, xoá nguy cơ lệch schema giữa hai nơi, và giữ được SEO.</p>
+
+  <div class="arch">
+    <div class="tier">
+      <div class="node">
+        <span class="tag">Repo · ChamXanh_Mobile</span>
+        <h4>Ứng dụng Chạm Xanh</h4>
+        <p>React Native + Expo · 5 tab · song ngữ · Expo Push · EAS Update để vá lỗi không cần chờ store duyệt</p>
+      </div>
+    </div>
+
+    <div class="link"><i></i><span>REST · JWT</span><i></i></div>
+
+    <div class="tier">
+      <div class="node hub">
+        <span class="tag">Repo · ChamXanh_WebAdmin / BE</span>
+        <h4>API Chạm Xanh — NestJS</h4>
+        <p>Nguồn sự thật duy nhất. Xác thực, phân quyền ba vai, cây trồng, vườn, lịch chăm, khám phá, trợ lý AI, chợ vật tư, đơn hàng, cộng đồng, cấu hình động, CMS.</p>
+      </div>
+    </div>
+
+    <div class="link"><i></i><span>ghi &amp; đọc</span><i></i></div>
+
+    <div class="tier two">
+      <div class="node">
+        <span class="tag">Repo · ChamXanh_WebAdmin / FE</span>
+        <h4>Web Admin</h4>
+        <p>Next.js trên Vercel. Nơi làm việc của Admin, Content và Support.</p>
+      </div>
+      <div class="node data">
+        <span class="tag">MongoDB Atlas</span>
+        <h4>Cơ sở dữ liệu chung</h4>
+        <p>Gồm cả ảnh lưu bằng GridFS. Một cluster, dùng chung cho toàn hệ thống.</p>
+      </div>
+    </div>
+
+    <div class="link"><i></i><span>chỉ đọc · dựng lại trang khi Admin lưu</span><i></i></div>
+
+    <div class="tier">
+      <div class="node">
+        <span class="tag">Repo · ChamXanh_WebIntroduce</span>
+        <h4>Web giới thiệu</h4>
+        <p>Next.js trên Vercel. Thư mục <code>/BE</code> chứa Route Handler và Server Component đọc dữ liệu; <code>/FE</code> chứa 5 trang giới thiệu cùng Chính sách bảo mật và Điều khoản sử dụng.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Nội dung cập nhật tức thì hoạt động thế nào</b>
+    <p>Nhân sự bấm Lưu trên Web Admin → API ghi vào MongoDB rồi gọi webhook <code>revalidatePath</code> của Vercel → trang giới thiệu dựng lại ngay. Trên ứng dụng, mọi nội dung đều tải từ API nên người dùng mở app là thấy bản mới. Backend chạy gói trả phí để không bị ngủ sau 15 phút — nhà trường đã tài trợ nên đây không còn là đánh đổi.</p>
+  </div>
+</section>
+
+<!-- ============ PHẠM VI ============ -->
+<section id="phamvi">
+  <h2>Phạm vi đã chốt</h2>
+  <p class="sublede">Bản Figma chứa lẫn hai bộ giao diện mua sẵn và một nhánh thăm dò mang tên Farmiant. Danh sách dưới đây tách phần thuộc về Chạm Xanh ra khỏi phần còn lại.</p>
+
+  <div class="scope">
+    <div class="in">
+      <h3>Nằm trong bản phát hành đầu</h3>
+      <ul>
+        <li>Khảo sát nhập môn nhiều bước rồi gợi ý cây theo không gian sống</li>
+        <li>Vườn của tôi, lịch chăm sóc, nhắc nhở qua thông báo đẩy</li>
+        <li>Giỏ Chờ Chăm Sóc và hướng dẫn thao tác từng bước</li>
+        <li>Khám phá cây trồng với nội dung nhân sự cập nhật hằng ngày</li>
+        <li><strong>Trợ lý AI</strong> hỏi đáp bằng chữ, gợi ý cây, và gợi ý <strong>liên kết tiếp thị</strong> dẫn ra sàn ngoài</li>
+        <li><strong>Chợ Vật Tư</strong> — module riêng, bán hàng của chính Chạm Xanh: giỏ hàng, địa chỉ, phí vận chuyển, đơn hàng, theo dõi đơn</li>
+        <li>Cộng đồng: đăng bài kèm ảnh, thích, bình luận, báo cáo, chặn</li>
+        <li>Nhắn tin riêng theo thời gian thực</li>
+        <li>Gói 39.000₫ và 69.000₫ theo hạn mức câu hỏi</li>
+        <li>Song ngữ Việt – Anh cho toàn bộ giao diện</li>
+        <li>Web giới thiệu 5 trang, nội dung fill từ Web Admin</li>
+      </ul>
+    </div>
+    <div class="out">
+      <h3>Không làm lần này</h3>
+      <ul>
+        <li>Nhận diện cây và chẩn đoán bệnh qua ảnh — màn “Trợ lý AI chẩn bệnh” chuyển thành mô tả triệu chứng bằng chữ kèm chip chọn nhanh: lá vàng, đốm nâu, héo rũ, rụng lá</li>
+        <li>Nhánh Farmiant — cảm biến đất, tưới tự động, trạm thời tiết. Giữ lại làm hướng phát triển tương lai, có chừa chỗ trong cấu trúc dữ liệu nhưng không viết mã lần này</li>
+        <li>Sàn nhiều người bán — xem mục Chợ Vật Tư bên dưới để biết cách chừa đường mở rộng</li>
+        <li>Hai bộ giao diện mua sẵn trong Figma chỉ dùng tham khảo</li>
+        <li>Gọi thoại, tạo giọng nói, Creative Writings</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Liên kết tiếp thị và Chợ Vật Tư là hai thứ khác nhau</b>
+    <p>Liên kết tiếp thị sống trong trợ lý AI: bot gợi ý sản phẩm rồi dẫn người dùng ra Shopee hoặc Lazada, Chạm Xanh ăn hoa hồng và không giữ hàng. Chợ Vật Tư là cửa hàng của chính Chạm Xanh: có tồn kho, có đơn hàng, có giao nhận. Hai module dùng hai collection tách biệt và không dùng chung mã nguồn.</p>
+  </div>
+</section>
+
+<!-- ============ ĐIỀU HƯỚNG ============ -->
+<section id="dieuhuong">
+  <h2>Điều hướng — giải bài toán sáu khu vực, năm chỗ</h2>
+  <p class="sublede">Cả Apple và Material đều giới hạn thanh tab ở năm mục; quá năm thì vùng chạm chen nhau. Nhưng sản phẩm có sáu khu vực cấp cao: Trang chủ, Vườn, Trợ lý, Chợ, Cộng đồng và Cá nhân.</p>
+
+  <p>Lời giải là <strong>đưa Cá nhân ra khỏi thanh tab</strong>, truy cập qua ảnh đại diện ở góc trên bên trái. Đây không phải giải pháp chữa cháy: màn Trang chủ trong Figma <em>đã có sẵn</em> ảnh đại diện ở đúng vị trí đó. Cá nhân là nơi người dùng ghé vài lần rồi thôi, còn Cộng đồng là nơi họ quay lại mỗi ngày — chỗ trong thanh tab nên thuộc về cái được dùng thường xuyên hơn.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th class="num">Vị trí</th><th>Tiếng Việt</th><th>Tiếng Anh</th><th>Vì sao ở đây</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Trang chủ</td><td>Home</td><td>Việc cần làm hôm nay — lý do mở app mỗi sáng</td></tr>
+        <tr><td class="num">2</td><td>Vườn</td><td>Garden</td><td>Toàn bộ cây đang trồng và nhật ký chăm sóc</td></tr>
+        <tr><td class="num">3</td><td>Trợ lý</td><td>Assistant</td><td>Giữa thanh, nhấn mạnh bằng nền xanh như trong Figma</td></tr>
+        <tr><td class="num">4</td><td>Chợ</td><td>Shop</td><td>Nguồn doanh thu, cần luôn nhìn thấy</td></tr>
+        <tr><td class="num">5</td><td>Cộng đồng</td><td>Community</td><td>Yếu tố giữ chân mạnh nhất trong nhóm ứng dụng cùng loại</td></tr>
+        <tr><td class="num">—</td><td>Cá nhân</td><td>Profile</td><td>Ảnh đại diện góc trên bên trái, không chiếm chỗ trong thanh tab</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Figma hiện đặt tên không nhất quán giữa các màn — chỗ ghi <code>My Garden</code>, chỗ ghi <code>Garden</code>; chỗ <code>AI Assistant</code>, chỗ <code>AI Care</code>. Bộ nhãn trên là bản chốt, dùng thống nhất cho cả hai ngôn ngữ.</p>
+</section>
+
+<!-- ============ MÀN HÌNH ============ -->
+<section id="manhinh">
+  <h2>Bản đồ màn hình</h2>
+  <p class="sublede">Thứ tự trong mỗi tab là thứ tự người dùng đi qua.</p>
+
+  <div class="tabs">
+    <div class="tab">
+      <header><b>Trang chủ</b><em>tab 1</em></header>
+      <ol>
+        <li><b>Chào hỏi</b> theo tên, kèm ảnh đại diện mở vào Cá nhân</li>
+        <li><b>Cây của tôi</b> dạng lưới bento kèm thanh sức khoẻ</li>
+        <li><b>Việc cần làm hôm nay</b> có giờ và tích hoàn thành</li>
+        <li>Nhắc nhở thay đất</li>
+        <li>Trung tâm thông báo</li>
+      </ol>
+    </div>
+
+    <div class="tab">
+      <header><b>Vườn</b><em>tab 2</em></header>
+      <ol>
+        <li>Danh sách cây đang trồng</li>
+        <li>Thêm cây từ danh mục hoặc tự nhập</li>
+        <li>Chi tiết cây và nhật ký chăm sóc</li>
+        <li>Giỏ Chờ Chăm Sóc</li>
+        <li>Hướng dẫn thao tác từng bước</li>
+        <li>Gợi ý trồng xen canh</li>
+      </ol>
+    </div>
+
+    <div class="tab">
+      <header><b>Trợ lý</b><em>tab 3</em></header>
+      <ol>
+        <li>Danh sách hội thoại</li>
+        <li>Phòng chat kèm chip triệu chứng gợi sẵn</li>
+        <li>Thẻ sản phẩm gắn nhãn Tài trợ</li>
+        <li>Màn hết hạn mức và nâng cấp gói</li>
+      </ol>
+    </div>
+
+    <div class="tab">
+      <header><b>Chợ</b><em>tab 4</em></header>
+      <ol>
+        <li>Chợ Vật Tư có tìm kiếm và lọc danh mục</li>
+        <li>Chi tiết sản phẩm</li>
+        <li>Giỏ hàng</li>
+        <li>Thêm địa chỉ nhận hàng</li>
+        <li>Thanh toán</li>
+        <li>Đơn hàng và theo dõi đơn</li>
+      </ol>
+    </div>
+
+    <div class="tab">
+      <header><b>Cộng đồng</b><em>thiết kế mới</em></header>
+      <ol>
+        <li>Bảng tin</li>
+        <li>Soạn bài kèm ảnh</li>
+        <li>Chi tiết bài và bình luận</li>
+        <li>Danh sách hội thoại</li>
+        <li>Phòng nhắn tin</li>
+        <li>Báo cáo vi phạm</li>
+      </ol>
+    </div>
+
+    <div class="tab">
+      <header><b>Cá nhân</b><em>qua ảnh đại diện</em></header>
+      <ol>
+        <li>Hồ sơ và chỉnh sửa hồ sơ</li>
+        <li>Gói của tôi và hạn mức còn lại</li>
+        <li>Đơn hàng của tôi</li>
+        <li>Ngôn ngữ, thông báo, bảo mật</li>
+        <li>Người đã chặn</li>
+        <li><b>Xoá tài khoản</b> — Apple bắt buộc</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Cộng đồng được thiết kế mới trước khi viết mã</b>
+    <p>Toàn bộ file Figma không có màn hình nào cho bảng tin, đăng bài, bình luận hay nhắn tin — chỉ có một hình minh hoạ dùng trong onboarding. Sáu màn trên sẽ được dựng theo đúng hệ màu, kiểu chữ và phong cách bento của các màn đã có, đưa ngược vào Figma để bạn duyệt, rồi mới code.</p>
+  </div>
+</section>
+
+<!-- ============ BỘ DỮ LIỆU CÂY ============ -->
+<section id="caytrong">
+  <h2>Bộ dữ liệu cây</h2>
+  <p class="sublede">Chưa có file dữ liệu sẵn, nên bộ trường dưới đây được thiết kế từ đầu để đủ nuôi ba thứ cùng lúc: thuật toán gợi ý, bộ sinh lịch chăm sóc, và phần trả lời của trợ lý AI. Thiếu một trường là một trong ba thứ đó phải đoán.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Trường</th><th>Kiểu</th><th>Dùng để làm gì</th></tr></thead>
+      <tbody>
+        <tr><td class="fld">tenVi · tenKhoaHoc</td><td>chuỗi</td><td>Hiển thị và tra cứu; tên khoa học giúp trợ lý AI trả lời chính xác</td></tr>
+        <tr><td class="fld">nhom</td><td>cây cảnh · rau ăn lá · rau gia vị · cây ăn quả mini</td><td>Figma có cả Monstera lẫn húng quế, hành lá, ớt, xà lách — hai nhóm cần lịch chăm rất khác nhau</td></tr>
+        <tr><td class="fld">anhSangToiThieu<br>anhSangLyTuong</td><td>bóng râm · sáng gián tiếp · nắng bán phần · nắng trực tiếp</td><td>Trường lọc quan trọng nhất. Tối thiểu dùng để loại cây không sống nổi, lý tưởng dùng để chấm điểm</td></tr>
+        <tr><td class="fld">chuKyTuoiMuaKho<br>chuKyTuoiMuaMua</td><td>số ngày</td><td>Miền Nam hai mùa, miền Bắc bốn mùa — lịch tưới phải đổi theo mùa và theo miền của người dùng</td></tr>
+        <tr><td class="fld">doSauKiemTraDat</td><td>cm, mặc định 2–3</td><td>Nhắc nhở nói rõ “chạm ngón tay sâu 3cm, khô mới tưới” thay vì chỉ báo đến giờ</td></tr>
+        <tr><td class="fld">chuKyBonPhan<br>chuKyThayDat<br>canPhunSuong</td><td>số ngày · số tháng · đúng sai</td><td>Bốn loại việc tách riêng, không gộp chung thành một lời nhắc mơ hồ</td></tr>
+        <tr><td class="fld">nhietDoNgay · nhietDoDem</td><td>khoảng °C</td><td>Cảnh báo khi đợt lạnh hoặc nắng nóng vượt ngưỡng chịu đựng của cây</td></tr>
+        <tr><td class="fld">doAm</td><td>thấp · trung bình · cao</td><td>Quyết định có cần phun sương và có hợp phòng máy lạnh không</td></tr>
+        <tr><td class="fld">anToanThuNuoi</td><td>đúng sai · ghi chú độc tính</td><td>Bộ lọc cứng. Nhà có chó mèo thì không bao giờ gợi ý cây độc</td></tr>
+        <tr><td class="fld">doKho</td><td>1 đến 5</td><td>Ghép với kinh nghiệm và thời gian rảnh khai trong khảo sát</td></tr>
+        <tr><td class="fld">kichThuocChau<br>khoangCachTrong</td><td>cm</td><td>Khớp với diện tích thật người dùng khai, ví dụ ban công 2m²</td></tr>
+        <tr><td class="fld">menhPhongThuy<br>yNghiaPhongThuy</td><td>Kim · Mộc · Thuỷ · Hoả · Thổ</td><td>Người mua cây ở Việt Nam quan tâm thật sự đến điều này. Là điểm cộng khi gợi ý và là chất liệu cho nội dung Khám phá</td></tr>
+        <tr><td class="fld">ngayThuHoach</td><td>số ngày · chỉ nhóm ăn được</td><td>Rau gia vị và rau ăn lá cần đếm ngược tới ngày thu hoạch</td></tr>
+        <tr><td class="fld">trongXenDuocVoi<br>khongTrongCungVoi</td><td>mảng mã cây</td><td>Nuôi màn “Trồng xen canh” đã có trong Figma</td></tr>
+        <tr><td class="fld">congDung</td><td>lọc không khí · trang trí · ăn được · phong thuỷ</td><td>Người dùng khai mục đích trong khảo sát, đây là chỗ đối chiếu</td></tr>
+        <tr><td class="fld">dauHieuBenhThuongGap</td><td>mảng · triệu chứng, nguyên nhân, cách xử lý</td><td>Nguồn trả lời cho chip triệu chứng, thay cho việc chẩn đoán qua ảnh</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <b>Dữ liệu mẫu để khởi động</b>
+    <p>Sẽ soạn sẵn khoảng 24 loài phổ biến ở Việt Nam, chia đều hai nhóm: cây cảnh gồm lưỡi hổ, trầu bà, kim ngân, lan ý, vạn niên thanh, monstera, kim tiền, cau tiểu trâm, sen đá, dương xỉ; và nhóm ăn được gồm húng quế, bạc hà, hành lá, ngò rí, ớt chỉ thiên, xà lách, cà chua bi — đúng những loài đã xuất hiện trong Figma. Đây là dữ liệu để chạy và kiểm thử, không phải dữ liệu cuối; đội nội dung bổ sung dần trên Web Admin.</p>
+  </div>
+</section>
+
+<!-- ============ THUẬT TOÁN ============ -->
+<section id="goiy">
+  <h2>Thuật toán gợi ý cây</h2>
+  <p class="sublede">Không dùng mô hình ngôn ngữ để chọn cây. Chấm điểm bằng luật cho ba thứ mà mô hình không cho được: kết quả ổn định, chi phí bằng không, và một câu giải thích thật sự đúng.</p>
+
+  <p>Khảo sát nhập môn thu về một bộ thẻ đặc tính — ánh sáng, diện tích, hướng ban công, thời gian rảnh mỗi tuần, kinh nghiệm, thú nuôi, mục đích trồng, miền đang sống, mệnh. Mỗi loài được chấm theo bảng dưới, loại thẳng nếu vướng bộ lọc cứng.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Tiêu chí</th><th>Cách chấm</th><th class="num">Trọng số</th></tr></thead>
+      <tbody>
+        <tr><td>Thú nuôi trong nhà</td><td>Loại thẳng mọi cây có độc nếu người dùng khai có chó mèo</td><td class="num">loại</td></tr>
+        <tr><td>Ánh sáng</td><td>Loại thẳng nếu chỗ đặt tối hơn mức tối thiểu; cộng điểm đầy nếu trùng mức lý tưởng</td><td class="num">30</td></tr>
+        <tr><td>Thời gian rảnh</td><td>Chu kỳ tưới càng dài càng hợp người bận</td><td class="num">20</td></tr>
+        <tr><td>Kinh nghiệm</td><td>Người mới ưu tiên độ khó 1–2; người có kinh nghiệm mở rộng tới 4–5</td><td class="num">15</td></tr>
+        <tr><td>Diện tích</td><td>Kích thước chậu trưởng thành phải lọt trong không gian đã khai</td><td class="num">15</td></tr>
+        <tr><td>Mục đích</td><td>Đối chiếu công dụng với mục đích người dùng chọn</td><td class="num">10</td></tr>
+        <tr><td>Phong thuỷ</td><td>Điểm cộng khi mệnh của cây hợp mệnh người dùng</td><td class="num">10</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Trả về sáu loài điểm cao nhất, mỗi loài kèm câu giải thích ghép từ chính các tiêu chí đã cộng điểm — ví dụ <em>“Hợp vì chịu được bóng bán phần, chỉ tưới 7 ngày một lần, và an toàn với mèo.”</em> Toàn bộ trọng số nằm trong <code>app_config</code> để Admin tinh chỉnh mà không cần phát hành lại ứng dụng, và mỗi thay đổi được ghi vào nhật ký thao tác.</p>
+
+  <div class="note">
+    <b>Lịch chăm sóc sinh ra thế nào</b>
+    <p>Khi người dùng thêm một cây vào vườn, hệ thống sinh lịch từ chu kỳ của loài đó, rồi điều chỉnh theo ba yếu tố: mùa hiện tại, miền đang sống, và vị trí đặt cây trong nhà mà người dùng khai. Cây đặt phòng máy lạnh tưới thưa hơn cây ngoài ban công. Bốn loại việc — tưới, bón, phun sương, thay đất — là bốn dòng lịch riêng, không gộp.</p>
+  </div>
+</section>
+
+<!-- ============ DỮ LIỆU ============ -->
+<section id="dulieu">
+  <h2>Cấu trúc dữ liệu</h2>
+  <p class="sublede">Các collection trong MongoDB, nhóm theo miền nghiệp vụ. Tài khoản quản trị tách khỏi tài khoản người dùng để rò rỉ một bên không kéo theo bên kia.</p>
+
+  <div class="groups">
+    <div class="grp">
+      <b>Tài khoản</b>
+      <dl>
+        <dt>users</dt><dd>email, mật khẩu băm, nhà cung cấp đăng nhập, ngôn ngữ, miền đang sống, token đẩy, gói đang dùng, danh sách đã chặn, thời điểm xoá</dd>
+        <dt>admin_users</dt><dd>tách riêng hoàn toàn · vai trò admin, content hoặc support</dd>
+        <dt>refresh_tokens</dt><dd>xoay vòng, thu hồi được từng thiết bị</dd>
+        <dt>email_verifications</dt><dd>xác minh và đặt lại mật khẩu, gửi qua Resend</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Khảo sát &amp; gợi ý</b>
+      <dl>
+        <dt>survey_questions</dt><dd>Admin sửa được câu hỏi và đáp án; mỗi đáp án gắn thẻ đặc tính</dd>
+        <dt>user_profiles</dt><dd>câu trả lời và bộ thẻ suy ra: ánh sáng, diện tích, hướng, thời gian rảnh, kinh nghiệm, thú nuôi, mục đích, mệnh</dd>
+        <dt>plants</dt><dd>bộ trường đầy đủ mô tả ở mục trên</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Vườn &amp; chăm sóc</b>
+      <dl>
+        <dt>user_plants</dt><dd>biệt danh, vị trí đặt, ảnh, ngày trồng, điểm sức khoẻ, ngày thu hoạch dự kiến</dd>
+        <dt>care_tasks</dt><dd>tưới, bón, phun sương, thay đất · hạn, đã xong, hoãn tới</dd>
+        <dt>care_guides</dt><dd>hướng dẫn từng bước, ví dụ thay đất gồm tách cây, vệ sinh rễ, hoàn tất</dd>
+        <dt>care_basket</dt><dd>Giỏ Chờ Chăm Sóc — sản phẩm lưu sẵn cho nhu cầu sắp tới của một cây</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Nội dung</b>
+      <dl>
+        <dt>discover_items</dt><dd>feed Khám phá, hẹn giờ đăng, bật tắt tức thì</dd>
+        <dt>articles</dt><dd>blog trên web giới thiệu</dd>
+        <dt>landing_pages</dt><dd>5 trang, mỗi trang một mảng section Admin tự sắp xếp</dd>
+        <dt>app_config</dt><dd>hạn mức miễn phí, trọng số gợi ý, giá gói, công tắc tính năng, thông báo bảo trì</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Trợ lý AI</b>
+      <dl>
+        <dt>conversations</dt><dd>tối đa 10 lượt mỗi hội thoại để chặn chi phí phình theo ngữ cảnh</dd>
+        <dt>affiliate_links</dt><dd>tiêu đề, sàn, giá, ảnh, thẻ phân loại, lượt bấm · Admin duyệt trước · tách hẳn khỏi products</dd>
+        <dt>ai_usage</dt><dd>đếm theo chu kỳ 30 ngày kể từ ngày kích hoạt gói</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Chợ Vật Tư</b>
+      <dl>
+        <dt>products</dt><dd>giá, tồn kho, danh mục, ảnh, trạng thái bán, <code>vendorId</code> mặc định là gian hàng Chạm Xanh</dd>
+        <dt>carts · addresses</dt><dd>giỏ hàng và sổ địa chỉ có tỉnh, quận, phường</dd>
+        <dt>orders</dt><dd>sản phẩm, phí ship, phương thức, trạng thái, mã giao dịch</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Cộng đồng</b>
+      <dl>
+        <dt>posts · comments</dt><dd>nội dung, ảnh, lượt thích, trạng thái hiển thị</dd>
+        <dt>reports</dt><dd>hàng đợi kiểm duyệt cho vai Support</dd>
+        <dt>dm_threads · dm_messages</dt><dd>nhắn tin riêng qua WebSocket</dd>
+      </dl>
+    </div>
+
+    <div class="grp">
+      <b>Hệ thống</b>
+      <dl>
+        <dt>notifications</dt><dd>nhật ký thông báo đẩy đã gửi</dd>
+        <dt>audit_logs</dt><dd>ai sửa gì, lúc nào — cần thiết khi có ba vai cùng làm</dd>
+        <dt>analytics_events</dt><dd>số liệu cho bảng điều khiển và cho báo cáo môn học</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AI ============ -->
+<section id="ai">
+  <h2>Trợ lý AI và liên kết tiếp thị</h2>
+  <p class="sublede">Mô hình ngôn ngữ không bao giờ được nhìn thấy đường dẫn sản phẩm. Nó chỉ chọn thẻ phân loại; backend mới là nơi ghép ra liên kết thật.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th class="num">Bước</th><th>Diễn ra ở đâu</th><th>Làm gì</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td>Ứng dụng</td><td>Người dùng đặt câu hỏi hoặc chọn chip triệu chứng</td></tr>
+        <tr><td class="num">2</td><td>API</td><td>Kiểm tra hạn mức và giới hạn tần suất trước khi tiêu tốn bất kỳ token nào</td></tr>
+        <tr><td class="num">3</td><td>Claude</td><td>Trả lời dựa trên dữ liệu cây do đội ngũ nhập, kèm lời gọi công cụ <code>tim_san_pham(tags)</code></td></tr>
+        <tr><td class="num">4</td><td>API</td><td>Truy vấn <code>affiliate_links</code> theo thẻ, trả về thẻ sản phẩm có cấu trúc</td></tr>
+        <tr><td class="num">5</td><td>Ứng dụng</td><td>Hiện thẻ kèm nhãn Tài trợ và nút dẫn ra sàn ngoài</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Cách này chặn ba rủi ro cùng lúc: mô hình không thể bịa ra đường dẫn không tồn tại, không thể làm sai mã tiếp thị khiến mất hoa hồng, và độ dài lời nhắc không phình lên theo số lượng liên kết trong kho.</p>
+
+  <p><strong>Chọn mô hình.</strong> Vì chi phí đã được tài trợ, ưu tiên chất lượng tiếng Việt: dùng Sonnet cho phần hỏi đáp mà người dùng đọc, và Haiku cho các tác vụ nền rẻ và lặp lại như gắn thẻ, tóm tắt hội thoại, phân loại câu hỏi. Lớp gọi mô hình viết tách rời để đổi mô hình chỉ là đổi cấu hình.</p>
+
+  <div class="note warn">
+    <b>Chặn chi phí ngoài dự kiến vẫn cần thiết dù được tài trợ</b>
+    <p>Giới hạn cứng ở backend: tối đa 10 câu mỗi giờ cho một tài khoản, tối đa 10 lượt mỗi hội thoại. Không có lớp này, một token bị lộ đủ để đốt hết hạn mức tài trợ chỉ trong một đêm — và lúc đó cả sản phẩm ngừng hoạt động.</p>
+  </div>
+</section>
+
+<!-- ============ CHỢ ============ -->
+<section id="cho">
+  <h2>Chợ Vật Tư</h2>
+  <p class="sublede">Một gian hàng của chính Chạm Xanh, nhưng cấu trúc dữ liệu chừa sẵn đường lên sàn nhiều người bán.</p>
+
+  <p>Mô hình một người bán dễ dựng và giữ toàn quyền kiểm soát, đổi lại toàn bộ rủi ro tồn kho thuộc về mình. Mô hình nhiều người bán đẩy rủi ro đó sang nhà vườn, nhưng kéo theo đăng ký người bán, duyệt gian hàng, chia tiền, đối soát và tranh chấp — cùng yêu cầu pháp nhân để chi trả. Con đường thường được khuyên là bắt đầu một người bán rồi mở dần, vì hướng ngược lại đóng cửa rất nhanh.</p>
+
+  <p>Cách làm ở đây: <strong>giữ một gian hàng, nhưng gắn <code>vendorId</code> vào <code>products</code> và <code>orders</code> ngay từ đầu</strong>, mặc định trỏ về gian hàng Chạm Xanh. Khi muốn mở cho nhà vườn khác, việc phải làm là thêm giao diện và quy trình duyệt, không phải chuyển đổi dữ liệu.</p>
+
+  <div class="note">
+    <b>Gợi ý về danh mục hàng đầu tiên</b>
+    <p>Nên mở bán bằng nhóm hàng không hỏng: đất, phân, chậu, hạt giống, dụng cụ. Đây cũng đúng là các danh mục đã có trong Figma. Cây sống nên để sau — hàng dễ chết trên đường vận chuyển, tỷ lệ đổi trả cao, và khiếu nại rất khó phân xử. Đây là lời khuyên vận hành, không phải ràng buộc kỹ thuật; hệ thống hỗ trợ cả hai.</p>
+  </div>
+</section>
+
+<!-- ============ DOANH THU ============ -->
+<section id="doanhthu">
+  <h2>Doanh thu và thanh toán</h2>
+  <p class="sublede">Hàng vật lý và nội dung số chịu hai luật chơi khác nhau. Tách đúng hai luồng thì vừa hợp lệ với cả hai kho ứng dụng, vừa giữ được phần lớn doanh thu.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead>
+        <tr><th>Bán gì</th><th>Ở đâu</th><th>Cổng thanh toán</th><th class="num">Phí</th><th>Vì sao</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vật tư, chậu, hạt giống</td><td>Trong ứng dụng</td><td>MoMo · Thẻ · COD</td><td class="num">≈ 2%</td><td>Hàng vật lý không bị bắt dùng thanh toán của kho ứng dụng</td></tr>
+        <tr><td>Gói 39k · 69k</td><td>App iOS</td><td>Apple In-App Purchase</td><td class="num">15%</td><td>Điều 3.1.1 — nội dung số bắt buộc</td></tr>
+        <tr><td>Gói 39k · 69k</td><td>App Android</td><td>Google Play Billing</td><td class="num">15%</td><td>Chính sách thanh toán của Google, tương tự Apple</td></tr>
+        <tr><td>Gói 39k · 69k</td><td>Web giới thiệu</td><td>MoMo</td><td class="num">≈ 2%</td><td>Ngoài phạm vi kho ứng dụng, ứng dụng chỉ đọc trạng thái</td></tr>
+        <tr><td>Hoa hồng liên kết</td><td>Trợ lý AI</td><td>Sàn ngoài trả</td><td class="num">—</td><td>Không giữ hàng, không xử lý thanh toán</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Quy tắc tính hạn mức</h3>
+  <p>Một câu là một tin nhắn của người dùng có gọi tới mô hình. Tin bị bộ lọc chặn vì quá ngắn hoặc trùng lặp thì không trừ. Mỗi hội thoại tối đa 10 lượt, sau đó mở hội thoại mới kèm tóm tắt ngắn. Hạn mức đặt lại sau mỗi 30 ngày kể từ ngày kích hoạt và không cộng dồn. Hạn mức của người dùng miễn phí do Admin chỉnh trong <code>app_config</code>, không cần phát hành lại ứng dụng.</p>
+</section>
+
+<!-- ============ CHẤT LƯỢNG ============ -->
+<section id="chatluong">
+  <h2>Chuẩn chất lượng</h2>
+  <p class="sublede">Thời gian không còn là ràng buộc, nên những việc thường bị cắt đầu tiên sẽ được giữ lại. Đây là phần khác biệt lớn nhất giữa một đồ án chạy được và một sản phẩm dùng được.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Hạng mục</th><th>Cam kết</th></tr></thead>
+      <tbody>
+        <tr><td>Kiểm thử tự động</td><td>Thuật toán chấm điểm gợi ý, bộ sinh lịch chăm sóc và bộ đếm hạn mức phải có kiểm thử đơn vị — đây là ba chỗ sai thầm lặng mà người dùng không báo lỗi. Các luồng API chính có kiểm thử đầu cuối.</td></tr>
+        <tr><td>Tích hợp liên tục</td><td>GitHub Actions trên cả ba repo: kiểm lỗi cú pháp, kiểm kiểu dữ liệu và chạy kiểm thử trên mỗi pull request. Không đẩy thẳng lên nhánh chính.</td></tr>
+        <tr><td>Kiểu dữ liệu dùng chung</td><td>Một gói TypeScript chứa kiểu dữ liệu và hằng số, dùng chung giữa API, Web Admin và ứng dụng. Đổi một trường là ba nơi cùng báo lỗi ngay lúc biên dịch.</td></tr>
+        <tr><td>Theo dõi lỗi</td><td>Sentry trên cả backend và ứng dụng, gắn phiên bản phát hành để biết lỗi thuộc bản nào.</td></tr>
+        <tr><td>Khả năng tiếp cận</td><td>Nhãn cho trình đọc màn hình, vùng chạm tối thiểu 44pt, độ tương phản đạt chuẩn AA, tôn trọng cỡ chữ hệ thống. Vừa là chất lượng, vừa là thứ Apple có kiểm.</td></tr>
+        <tr><td>Hiệu năng</td><td>Ảnh nén trước khi tải lên, danh sách dài dùng cuộn ảo, đánh chỉ mục MongoDB cho mọi truy vấn có lọc. Đặt ngưỡng thời gian phản hồi và theo dõi liên tục.</td></tr>
+        <tr><td>Tài liệu</td><td>Swagger sinh tự động, tệp CLAUDE.md mô tả quy ước dự án, và hướng dẫn dựng môi trường cho từng repo.</td></tr>
+        <tr><td>Dữ liệu mẫu</td><td>Script tạo dữ liệu mẫu đầy đủ để môi trường mới chạy được ngay, phục vụ cả kiểm thử lẫn quay video demo.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ LỘ TRÌNH ============ -->
+<section id="lotrinh">
+  <h2>Trình tự dựng</h2>
+  <p class="sublede">Chín giai đoạn theo thứ tự phụ thuộc, không gắn với tuần cụ thể. Mỗi giai đoạn có một mốc kiểm chứng phải đạt trước khi sang giai đoạn kế — đây là cách giữ chất lượng khi không có ai review giúp.</p>
+
+  <div class="ph">
+    <header><span class="no">GĐ 0</span><h3>Chuẩn bị và nền móng</h3><span class="span">≈ 1 tuần</span></header>
+    <ul>
+      <li>Đăng ký tài khoản hai kho ứng dụng, mua tên miền</li>
+      <li>Khởi tạo ba repo, dựng CI, tệp CLAUDE.md, quy ước commit</li>
+      <li>Rút hệ màu, kiểu chữ, thang giãn cách và bộ component từ Figma</li>
+      <li>Soạn bộ dữ liệu 24 loài cây mẫu</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>CI chạy xanh trên cả ba repo, dữ liệu cây mẫu nằm trong MongoDB</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 1</span><h3>Nền tảng API</h3><span class="span">≈ 2 tuần</span></header>
+    <ul>
+      <li>NestJS, kết nối Atlas, gói kiểu dữ liệu dùng chung</li>
+      <li>Đăng nhập email, Google, Apple · JWT có xoay vòng · Resend</li>
+      <li>Phân quyền ba vai, xoá tài khoản, cấu hình động, nhật ký thao tác</li>
+      <li>Swagger, Sentry, kiểm thử đầu cuối cho luồng xác thực</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Đăng ký, xác minh, đăng nhập, đổi mật khẩu và xoá tài khoản đều có kiểm thử tự động</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 2</span><h3>Dữ liệu cây và thuật toán gợi ý</h3><span class="span">≈ 2 tuần</span></header>
+    <ul>
+      <li>Collection cây với đầy đủ trường đã đặc tả</li>
+      <li>Bộ câu hỏi khảo sát sửa được từ Admin, gắn thẻ đặc tính cho từng đáp án</li>
+      <li>Bộ chấm điểm và bộ sinh câu giải thích</li>
+      <li>Bộ sinh lịch chăm sóc theo mùa, theo miền, theo vị trí đặt cây</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Kiểm thử đơn vị phủ đủ các trường hợp biên: nhà có mèo, ban công hướng Tây, người bận, người mới</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 3</span><h3>Web Admin</h3><span class="span">≈ 2 tuần</span></header>
+    <ul>
+      <li>Đăng nhập, bố cục, menu, bảng dữ liệu dùng chung</li>
+      <li>Quản lý cây trồng, tải ảnh, nhập liệu hàng loạt</li>
+      <li>Quản lý người dùng và tài khoản quản trị</li>
+      <li>Bảng điều khiển số liệu</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Một người không phải lập trình viên tự nhập trọn một loài cây mà không cần hướng dẫn</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 4</span><h3>Nội dung và web giới thiệu</h3><span class="span">≈ 2 tuần</span></header>
+    <ul>
+      <li>CMS cho feed Khám phá, bài viết và 5 trang giới thiệu</li>
+      <li>Webhook dựng lại trang khi Admin lưu</li>
+      <li>Năm trang giới thiệu, Chính sách bảo mật, Điều khoản, SEO, form liên hệ</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Sửa nội dung trên Admin, trang công khai đổi trong vòng vài giây; có đường dẫn để khai báo với hai kho ứng dụng</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 5</span><h3>Ứng dụng — lõi chăm cây</h3><span class="span">≈ 4 tuần</span></header>
+    <ul>
+      <li>Expo, năm tab, song ngữ, hệ thiết kế, bản dựng thử trên máy thật</li>
+      <li>Đăng nhập, onboarding, khảo sát nhiều bước, màn kết quả gợi ý</li>
+      <li>Vườn, lịch chăm sóc, Trang chủ, Giỏ Chờ Chăm Sóc, thông báo đẩy</li>
+      <li>Khám phá cây trồng, hướng dẫn từng bước, trồng xen canh</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Dùng thật trong bảy ngày liên tục trên máy cá nhân, nhận đủ nhắc nhở và không mất dữ liệu</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 6</span><h3>Trợ lý AI và liên kết tiếp thị</h3><span class="span">≈ 2 tuần</span></header>
+    <ul>
+      <li>Gọi mô hình qua lớp trừu tượng, công cụ tìm sản phẩm, kho liên kết trên Admin</li>
+      <li>Hạn mức, giới hạn tần suất, giới hạn lượt mỗi hội thoại</li>
+      <li>Chip triệu chứng thay cho chẩn đoán qua ảnh</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Thử ba mươi câu hỏi thật, không có câu nào bịa liên kết hay vượt hạn mức</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 7</span><h3>Chợ Vật Tư</h3><span class="span">≈ 3 tuần</span></header>
+    <ul>
+      <li>Sản phẩm, danh mục, tồn kho, chi tiết sản phẩm, giỏ hàng, sổ địa chỉ</li>
+      <li>MoMo, COD, đơn hàng, theo dõi đơn</li>
+      <li>Quản lý đơn và tồn kho trên Admin</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Đặt một đơn thật từ đầu đến cuối, tiền vào đúng tài khoản, tồn kho trừ đúng</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 8</span><h3>Cộng đồng và nhắn tin</h3><span class="span">≈ 3 tuần</span></header>
+    <ul>
+      <li>Thiết kế sáu màn còn thiếu, đưa vào Figma để duyệt</li>
+      <li>Bảng tin, bình luận, thích, báo cáo, chặn, hàng đợi kiểm duyệt</li>
+      <li>Nhắn tin riêng qua WebSocket</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Hai máy nhắn tin thấy nhau tức thì; báo cáo một bài thì bài biến mất khỏi bảng tin của người báo</span></div>
+  </div>
+
+  <div class="ph">
+    <header><span class="no">GĐ 9</span><h3>Hoàn thiện và phát hành</h3><span class="span">≈ 3 tuần</span></header>
+    <ul>
+      <li>Thanh toán trong ứng dụng cho gói hội viên</li>
+      <li>Rà khả năng tiếp cận, hiệu năng, xử lý lỗi mạng và trạng thái rỗng</li>
+      <li>Khai báo quyền riêng tư, phân loại độ tuổi, ảnh chụp màn hình cho hai kho</li>
+      <li>Nộp store và sửa lỗi vòng duyệt</li>
+    </ul>
+    <div class="gate"><b>Mốc</b><span>Ứng dụng được duyệt trên cả App Store và Google Play</span></div>
+  </div>
+
+  <p style="margin-top:20px">Tổng cộng khoảng hai mươi bốn tuần nếu làm liên tục. Con số này rộng hơn ước tính trước vì đã tính cả kiểm thử, tích hợp liên tục, thiết kế phần còn thiếu và hai tuần dự phòng cho vòng duyệt — chứ không phải vì phạm vi phình thêm.</p>
+</section>
+
+<!-- ============ RỦI RO ============ -->
+<section id="ruiro">
+  <h2>Rủi ro</h2>
+  <p class="sublede">Chi phí dịch vụ đã được nhà trường tài trợ nên nhóm rủi ro ngân sách hạ tầng không còn. Những gì còn lại đều nằm ngoài phạm vi lập trình.</p>
+
+  <div class="risk">
+    <span class="pill blk">Chặn</span>
+    <div>
+      <b>Cổng MoMo doanh nghiệp cần giấy phép kinh doanh</b>
+      <p>Không có pháp nhân thì không mở được cổng đối soát tự động. Phương án thay thế: chỉ nhận COD và chuyển khoản kèm mã đơn, đối soát thủ công trên Admin. Cần xác nhận trước giai đoạn 7.</p>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="pill blk">Chặn</span>
+    <div>
+      <b>Bán hàng thật là vận hành, không phải mã nguồn</b>
+      <p>Cần vốn nhập hàng, chỗ chứa, khâu đóng gói, đối tác vận chuyển và chính sách đổi trả. Phần mềm xong trong ba tuần, chuỗi cung ứng thì không. Nhà trường tài trợ hạ tầng, không tài trợ tồn kho.</p>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="pill blk">Chặn</span>
+    <div>
+      <b>Chưa có tài khoản nhà phát triển của Apple và Google</b>
+      <p>Thanh toán trong ứng dụng không thể lập trình hay kiểm thử nếu thiếu. Riêng xét duyệt tài khoản Apple đã mất một đến hai tuần, chưa tính vòng duyệt ứng dụng.</p>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="pill att">Cần xử lý</span>
+    <div>
+      <b>Chưa có dữ liệu cây thật</b>
+      <p>Hai mươi bốn loài mẫu đủ để chạy và kiểm thử, nhưng một ứng dụng chăm cây chỉ thuyết phục khi danh mục đủ rộng. Việc xây dựng dữ liệu nên chạy song song ngay từ giai đoạn 2, không đợi phần mềm xong.</p>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="pill att">Cần xử lý</span>
+    <div>
+      <b>Ảnh lưu trong cơ sở dữ liệu phải đi qua backend</b>
+      <p>Không có mạng phân phối nội dung, nên bảng tin nhiều ảnh sẽ tải chậm hơn. Ứng dụng nén ảnh xuống khoảng 300KB trước khi gửi, và lớp lưu trữ viết tách rời để đổi sang dịch vụ ảnh chuyên dụng chỉ bằng một biến môi trường nếu cần.</p>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="pill att">Cần xử lý</span>
+    <div>
+      <b>Nội dung song ngữ nhân đôi khối lượng nhập liệu</b>
+      <p>Giao diện song ngữ đầy đủ ngay từ đầu. Nhưng nội dung do nhân sự nhập thì trường tiếng Anh để không bắt buộc, thiếu thì tự hiển thị tiếng Việt — nếu không, việc xây dựng dữ liệu cây sẽ chậm gấp đôi.</p>
+    </div>
+  </div>
+
+  <div class="risk">
+    <span class="pill wch">Theo dõi</span>
+    <div>
+      <b>Một người làm toàn bộ, không có ai review</b>
+      <p>Đây là lý do các mốc kiểm chứng ở mỗi giai đoạn được viết dưới dạng có thể chứng minh được, chứ không phải “đã xong”. Nếu phải cắt bớt, thứ tự nên là: nhắn tin riêng, rồi thanh toán trong ứng dụng, rồi bảng tin cộng đồng.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STORE ============ -->
+<section id="store">
+  <h2>Điều kiện bắt buộc để được duyệt</h2>
+  <p class="sublede">Thiếu bất kỳ mục nào dưới đây thì ứng dụng bị từ chối, dù phần còn lại hoàn hảo. Tất cả đã được đưa vào trình tự dựng.</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>Yêu cầu</th><th>Điều khoản</th><th>Giai đoạn</th></tr></thead>
+      <tbody>
+        <tr><td>Xoá tài khoản ngay trong ứng dụng</td><td>Apple 5.1.1(v)</td><td>GĐ 1</td></tr>
+        <tr><td>Đăng nhập bằng Apple khi đã có đăng nhập bằng Google</td><td>Apple 4.8</td><td>GĐ 1</td></tr>
+        <tr><td>Đường dẫn công khai tới Chính sách bảo mật và Điều khoản</td><td>Cả hai kho</td><td>GĐ 4</td></tr>
+        <tr><td>Báo cáo vi phạm, chặn người dùng, lọc nội dung, thông tin liên hệ công khai</td><td>Apple 1.2</td><td>GĐ 8</td></tr>
+        <tr><td>Thanh toán trong ứng dụng cho nội dung số</td><td>Apple 3.1.1 · Google Play Billing</td><td>GĐ 9</td></tr>
+        <tr><td>Khai báo quyền riêng tư và phân loại độ tuổi</td><td>App Privacy · Data Safety</td><td>GĐ 9</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ NGAY ============ -->
+<section id="ngay">
+  <h2>Việc cần khởi động ngay</h2>
+  <p class="sublede">Năm việc dưới đây đều có thời gian chờ bên ngoài tầm kiểm soát, nên làm càng sớm càng tốt, song song với giai đoạn 0.</p>
+
+  <ul class="check">
+    <li><span class="box"></span><div><b>Đăng ký tài khoản Apple Developer</b><small>Xét duyệt một đến hai tuần · cần cho toàn bộ giai đoạn 9</small></div><span class="due">ngay</span></li>
+    <li><span class="box"></span><div><b>Đăng ký tài khoản Google Play Developer</b><small>Nhanh hơn Apple nhưng vẫn nên làm cùng lúc</small></div><span class="due">ngay</span></li>
+    <li><span class="box"></span><div><b>Mua tên miền</b><small>Cần cho web giới thiệu và để Resend gửi thư không rơi vào hộp rác</small></div><span class="due">ngay</span></li>
+    <li><span class="box"></span><div><b>Hỏi rõ điều kiện mở cổng MoMo doanh nghiệp</b><small>Cần giấy phép kinh doanh hay không — câu trả lời quyết định cách làm giai đoạn 7</small></div><span class="due">ngay</span></li>
+    <li><span class="box"></span><div><b>Bắt đầu thu thập dữ liệu cây song song</b><small>Hai mươi bốn loài mẫu chỉ đủ để kiểm thử; danh mục thật cần xây dần từ giai đoạn 2</small></div><span class="due">GĐ 2</span></li>
+  </ul>
+</section>
+
+<footer>
+  <span>Chạm Xanh · Đặc tả kỹ thuật v2.0</span>
+  <span>Cập nhật 09.09.2026</span>
+</footer>
+
+</div>
