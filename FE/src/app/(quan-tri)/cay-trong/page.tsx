@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { goiApi } from '@/lib/api';
 
 export const metadata: Metadata = { title: 'Cây trồng' };
@@ -56,13 +57,18 @@ export default async function TrangCayTrong({
 
   return (
     <>
-      <div className="dau-trang">
-        <p className="nhan">Nội dung</p>
-        <h1>Cây trồng</h1>
-        <p className="mo-ta-trang">
-          Dữ liệu ở đây nuôi cùng lúc ba thứ: thuật toán gợi ý, bộ sinh lịch chăm sóc, và phần trả
-          lời của trợ lý AI. Thiếu một trường là một trong ba thứ đó phải đoán.
-        </p>
+      <div className="dau-trang dau-trang-co-nut">
+        <div>
+          <p className="nhan">Nội dung</p>
+          <h1>Cây trồng</h1>
+          <p className="mo-ta-trang">
+            Dữ liệu ở đây nuôi cùng lúc ba thứ: thuật toán gợi ý, bộ sinh lịch chăm sóc, và phần
+            trả lời của trợ lý AI. Thiếu một trường là một trong ba thứ đó phải đoán.
+          </p>
+        </div>
+        <Link href="/cay-trong/moi" className="nut nut-chinh">
+          + Thêm loài cây
+        </Link>
       </div>
 
       {loi && (
@@ -134,12 +140,15 @@ export default async function TrangCayTrong({
               <th scope="col">Độ khó</th>
               <th scope="col">Thú nuôi</th>
               <th scope="col">Kiểm chứng</th>
+              <th scope="col">
+                <span className="an-nhin">Sửa</span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {danhSach.muc.length === 0 && !loi && (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={8}>
                   <div className="rong">
                     <strong>{tim ? 'Không tìm thấy loài nào khớp' : 'Chưa có dữ liệu cây'}</strong>
                     {tim ? (
@@ -180,6 +189,11 @@ export default async function TrangCayTrong({
                   <span className={`trang-thai ${c.daKiemChung ? 'bat' : 'tat'}`}>
                     {c.daKiemChung ? 'Đã kiểm chứng' : 'Bản nháp'}
                   </span>
+                </td>
+                <td>
+                  <Link href={`/cay-trong/${c.ma}`} className="nut nut-phu nut-sua-dong">
+                    Sửa
+                  </Link>
                 </td>
               </tr>
             ))}

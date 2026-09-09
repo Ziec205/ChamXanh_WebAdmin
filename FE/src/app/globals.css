@@ -695,3 +695,96 @@ code {
   color: var(--muc-mo);
 }
 .danh-sach-ly-do li { margin-bottom: 3px; }
+
+/* ============================================================
+   Đầu trang có nút hành động (danh sách + nút thêm mới)
+   ============================================================ */
+.dau-trang-co-nut {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--k4);
+  flex-wrap: wrap;
+}
+.dau-trang .nhan a { color: var(--muc-mo); text-decoration: underline; }
+.dau-trang .nhan a:hover { color: var(--xanh-dam); }
+
+.nut-sua-dong { min-height: 32px; padding: 5px 12px; font-size: 12.5px; }
+
+.bao-thanh-cong {
+  display: flex;
+  gap: var(--k3);
+  padding: var(--k3) var(--k4);
+  border-radius: var(--bo-vua);
+  font-size: 13.5px;
+  background: var(--tot-nen);
+  color: var(--tot);
+  border: 1px solid rgba(63, 122, 66, 0.2);
+}
+
+/* ============================================================
+   Form thêm/sửa cây (và các form nhiều khối khác)
+   ============================================================ */
+.form-cay { max-width: 900px; }
+
+.khoi-form {
+  border: 1px solid var(--vien);
+  border-radius: var(--bo-lon);
+  padding: var(--k5);
+  margin: 0 0 var(--k5);
+  background: var(--mat);
+}
+.khoi-form legend {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--xanh-dam);
+  padding: 0 6px;
+}
+.khoi-form textarea {
+  font-family: inherit;
+  font-size: 15px;
+  padding: 11px 14px;
+  border: 1px solid var(--vien-sage);
+  border-radius: var(--bo-vua);
+  background: var(--mat);
+  color: var(--muc);
+  resize: vertical;
+}
+.khoi-form textarea:focus {
+  border-color: var(--xanh-dam);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(69, 104, 5, 0.12);
+}
+.khoi-form select[multiple] {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 6px;
+  border: 1px solid var(--vien-sage);
+  border-radius: var(--bo-vua);
+  background: var(--mat);
+  color: var(--muc);
+}
+.khoi-form select[multiple] option { padding: 5px 8px; border-radius: 4px; }
+
+.dong-dau-hieu-benh {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--k3);
+  padding: var(--k4) 0;
+  border-bottom: 1px dashed var(--vien);
+  margin-bottom: var(--k4);
+}
+.dong-dau-hieu-benh .luoi-form { flex: 1; margin-bottom: 0; }
+.nut-xoa-dong {
+  color: var(--loi);
+  border-color: rgba(186, 26, 26, 0.3);
+  min-height: 44px;
+  flex: none;
+}
+.nut-xoa-dong:hover { background: var(--loi-nen); }
+
+.hang-nut-form {
+  display: flex;
+  gap: var(--k3);
+  margin-top: var(--k5);
+}
