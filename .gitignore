@@ -1,0 +1,58 @@
+# Phụ thuộc
+node_modules/
+.pnp/
+.pnp.js
+
+# Biến môi trường — KHÔNG BAO GIỜ commit
+.env
+.env.*
+!.env.example
+
+# Bản dựng
+dist/
+build/
+.next/
+out/
+*.tsbuildinfo
+
+# Expo
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# Kiểm thử
+coverage/
+.nyc_output/
+
+# Nhật ký
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Trình soạn thảo
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Vercel
+.vercel
+
+# Tạm
+tmp/
+temp/
+*.tmp
+~$*
