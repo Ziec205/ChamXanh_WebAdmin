@@ -36,23 +36,23 @@ export const MENU: { nhom: string; muc: MucMenu[] }[] = [
       { duongDan: '/cay-trong', nhan: 'Cây trồng', vaiDuocPhep: ['admin', 'content'] },
       { duongDan: '/thu-goi-y', nhan: 'Thử gợi ý', vaiDuocPhep: ['admin', 'content'] },
       { duongDan: '/khao-sat', nhan: 'Khảo sát nhập môn', vaiDuocPhep: ['admin', 'content'] },
-      { duongDan: '/kham-pha', nhan: 'Khám phá', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
-      { duongDan: '/trang-gioi-thieu', nhan: 'Trang giới thiệu', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
-      { duongDan: '/lien-ket-tiep-thi', nhan: 'Liên kết tiếp thị', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
+      { duongDan: '/kham-pha', nhan: 'Khám phá', vaiDuocPhep: ['admin', 'content'] },
+      { duongDan: '/trang-gioi-thieu', nhan: 'Trang giới thiệu', vaiDuocPhep: ['admin', 'content'] },
+      { duongDan: '/lien-ket-tiep-thi', nhan: 'Liên kết tiếp thị', vaiDuocPhep: ['admin', 'content'] },
     ],
   },
   {
     nhom: 'Người dùng',
     muc: [
-      { duongDan: '/nguoi-dung', nhan: 'Người dùng app', vaiDuocPhep: ['admin', 'support'], chuaLam: true },
-      { duongDan: '/kiem-duyet', nhan: 'Kiểm duyệt', vaiDuocPhep: ['admin', 'support'], chuaLam: true },
+      { duongDan: '/nguoi-dung', nhan: 'Người dùng app', vaiDuocPhep: ['admin', 'support'] },
+      { duongDan: '/kiem-duyet', nhan: 'Kiểm duyệt', vaiDuocPhep: ['admin', 'support'] },
     ],
   },
   {
     nhom: 'Chợ Vật Tư',
     muc: [
-      { duongDan: '/san-pham', nhan: 'Sản phẩm', vaiDuocPhep: ['admin', 'content'], chuaLam: true },
-      { duongDan: '/don-hang', nhan: 'Đơn hàng', vaiDuocPhep: ['admin', 'support'], chuaLam: true },
+      { duongDan: '/san-pham', nhan: 'Sản phẩm', vaiDuocPhep: ['admin', 'content'] },
+      { duongDan: '/don-hang', nhan: 'Đơn hàng', vaiDuocPhep: ['admin', 'support'] },
     ],
   },
   {

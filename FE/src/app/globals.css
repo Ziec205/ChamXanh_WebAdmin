@@ -574,6 +574,10 @@ code {
   background: var(--canh-bao-nen);
   color: var(--canh-bao);
 }
+.chip-loi {
+  background: var(--loi-nen);
+  color: var(--loi);
+}
 
 /* ============================================================
    Biểu mẫu dùng chung (thử gợi ý, thêm/sửa cây, khảo sát, cấu hình)

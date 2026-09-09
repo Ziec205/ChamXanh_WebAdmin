@@ -61,3 +61,47 @@ export const THOI_GIAN_RANH = [
 export type ThoiGianRanh = (typeof THOI_GIAN_RANH)[number];
 
 export const NHOM_AN_DUOC: readonly NhomCay[] = ['rau ăn lá', 'rau gia vị', 'cây ăn quả mini'];
+
+/** Khớp `BE/src/modules/lien-ket-tiep-thi/schemas/lien-ket.schema.ts` — enum SanThuongMai. */
+export const SAN_THUONG_MAI = ['shopee', 'lazada', 'khac'] as const;
+export type SanThuongMai = (typeof SAN_THUONG_MAI)[number];
+export const NHAN_SAN: Record<SanThuongMai, string> = { shopee: 'Shopee', lazada: 'Lazada', khac: 'Khác' };
+
+/** Khớp `BE/src/modules/kham-pha/schemas/kham-pha.schema.ts` — enum LoaiKhamPha. */
+export const LOAI_KHAM_PHA = ['meo-cham-soc', 'kien-thuc', 'thu-thuat'] as const;
+export type LoaiKhamPha = (typeof LOAI_KHAM_PHA)[number];
+export const NHAN_LOAI_KHAM_PHA: Record<LoaiKhamPha, string> = {
+  'meo-cham-soc': 'Mẹo chăm sóc',
+  'kien-thuc': 'Kiến thức',
+  'thu-thuat': 'Thủ thuật',
+};
+
+/** Khớp `BE/src/modules/san-pham/schemas/san-pham.schema.ts` — enum NhomSanPham. */
+export const NHOM_SAN_PHAM = ['dat', 'phan', 'chau', 'hat-giong', 'dung-cu'] as const;
+export type NhomSanPham = (typeof NHOM_SAN_PHAM)[number];
+export const NHAN_NHOM_SAN_PHAM: Record<NhomSanPham, string> = {
+  dat: 'Đất trồng',
+  phan: 'Phân bón',
+  chau: 'Chậu',
+  'hat-giong': 'Hạt giống',
+  'dung-cu': 'Dụng cụ',
+};
+
+/** Khớp `BE/src/modules/don-hang/schemas/don-hang.schema.ts` — enum TrangThaiDonHang. */
+export const TRANG_THAI_DON_HANG = ['cho-xac-nhan', 'dang-giao', 'hoan-thanh', 'da-huy'] as const;
+export type TrangThaiDonHang = (typeof TRANG_THAI_DON_HANG)[number];
+export const NHAN_TRANG_THAI_DON: Record<TrangThaiDonHang, string> = {
+  'cho-xac-nhan': 'Chờ xác nhận',
+  'dang-giao': 'Đang giao',
+  'hoan-thanh': 'Hoàn thành',
+  'da-huy': 'Đã huỷ',
+};
+
+/** Khớp `BE/src/modules/kiem-duyet/schemas/bao-cao.schema.ts` — enum TrangThaiBaoCao. */
+export const TRANG_THAI_BAO_CAO = ['cho-xu-ly', 'da-xu-ly', 'da-bo-qua'] as const;
+export type TrangThaiBaoCao = (typeof TRANG_THAI_BAO_CAO)[number];
+export const NHAN_TRANG_THAI_BAO_CAO: Record<TrangThaiBaoCao, string> = {
+  'cho-xu-ly': 'Chờ xử lý',
+  'da-xu-ly': 'Đã xử lý',
+  'da-bo-qua': 'Đã bỏ qua',
+};
