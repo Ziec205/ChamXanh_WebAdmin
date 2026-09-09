@@ -788,3 +788,45 @@ code {
   gap: var(--k3);
   margin-top: var(--k5);
 }
+
+/* ============================================================
+   Khảo sát nhập môn
+   ============================================================ */
+.danh-sach-cau-hoi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--k3);
+}
+
+.the-cau-hoi { padding: var(--k4) var(--k5); }
+
+.dau-the-cau-hoi {
+  display: flex;
+  align-items: center;
+  gap: var(--k4);
+}
+.thu-tu-cau-hoi {
+  font-family: var(--chu-so);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muc-mo);
+  flex: none;
+  width: 28px;
+}
+.noi-dung-cau-hoi-tom-tat { flex: 1; min-width: 0; }
+.noi-dung-cau-hoi-tom-tat h3 { margin: 0; font-size: 15px; }
+.ma-khoa-cau-hoi { font-size: 12px; color: var(--muc-mo); margin: 3px 0 0; }
+
+.the-cau-hoi-dang-mo { border: 2px solid var(--xanh-dam); }
+
+.tieu-de-dap-an { margin: 0 0 var(--k3); font-size: 14px; color: var(--muc-phu); }
+
+.dong-dap-an {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--k3);
+  padding: var(--k3) 0;
+  border-bottom: 1px dashed var(--vien);
+  margin-bottom: var(--k3);
+}
+.dong-dap-an .luoi-form { flex: 1; margin-bottom: 0; }
