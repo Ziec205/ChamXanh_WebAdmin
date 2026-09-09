@@ -10,12 +10,12 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 
 ## Trạng thái hiện tại
 
-**GĐ 0, GĐ 2, GĐ 3 xong. GĐ 1 xong phần không bị chặn.**
+**GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.**
 
-**81 kiểm thử đơn vị + 78 kiểm thử đầu cuối — tất cả xanh.** Typecheck, lint và build sạch cả
+**81 kiểm thử đơn vị + 112 kiểm thử đầu cuối — tất cả xanh.** Typecheck, lint và build sạch cả
 BE lẫn FE, kể cả `next build` production.
 
-**Đã push lên GitHub** (ChamXanh_WebAdmin, 09/09/2026, commit `cf5694b`). Hai repo
+**Đã push lên GitHub** (ChamXanh_WebAdmin, 09/09/2026, commit `a067800`). Hai repo
 ChamXanh_Mobile (`1de04d2`) và ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
 
 > **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
@@ -51,15 +51,33 @@ ChamXanh_Mobile (`1de04d2`) và ChamXanh_WebIntroduce (`d43bcee`) vẫn ở tr�
 - Đồng thời vá xong lỗ hổng validation: `cay-trong` và `khao-sat` trước đây nhận
   `Partial<Plant>`/`Partial<CauHoi>` không có DTO, `ValidationPipe` không lọc được gì. Đã thêm
   `CreatePlantDto`/`UpdatePlantDto`/`CapNhatCauHoiDto` đầy đủ ràng buộc.
+- **Hoàn thiện 100% menu Web Admin — 7 module còn lại** (backend + 7 trang FE, đi trước phạm vi
+  gốc của GĐ 3 để không còn `chuaLam: true` nào trong `FE/src/lib/vai-tro.ts`):
+  1. `/lien-ket-tiep-thi` — CRUD liên kết tiếp thị (`affiliate_links`), dẫn ra Shopee/Lazada,
+     KHÔNG giữ hàng. Trợ lý AI chỉ chọn `tags`, không thấy URL.
+  2. `/kham-pha` — CRUD nội dung khám phá (`discover_items`): mẹo chăm sóc, kiến thức, thủ thuật
+  3. `/trang-gioi-thieu` — CRUD bài viết (`articles`), `duongDan` (slug) không đổi được sau khi tạo
+  4. `/san-pham` — CRUD sản phẩm Chợ Vật Tư (`products`), có tồn kho, gắn sẵn `vendorId`
+  5. `/nguoi-dung` — tra cứu + khoá/kích hoạt tài khoản người dùng app (`users`, schema tối
+     thiểu — sẽ khớp lại khi GĐ 5 dựng luồng đăng ký thật)
+  6. `/kiem-duyet` — hàng đợi báo cáo vi phạm (`reports`), xử lý/bỏ qua (Apple 1.2)
+  7. `/don-hang` — xem đơn + đổi trạng thái (`orders`), có kiểm tra chuyển trạng thái hợp lệ
+     (không nhảy cóc, không lùi sau khi hoàn thành/huỷ)
+
+  `nguoi-dung`, `kiem-duyet`, `reports` là **lớp quản trị đi trước** — collection thật
+  (`users`, `posts`, `comments`) chưa tồn tại vì mobile (GĐ 5) và cộng đồng (GĐ 8) chưa dựng.
+  Schema hiện tại là suy đoán hợp lý theo "Cấu trúc dữ liệu", cần đối chiếu lại khi hai giai
+  đoạn đó thật sự triển khai. `don-hang` tương tự — chưa có luồng đặt đơn thật (GĐ 7), Admin
+  hiện chỉ quản lý trạng thái.
 
 ## Việc kế tiếp
 
-GĐ 3 đã xong 100% — **toàn bộ menu Web Admin thuộc phạm vi GĐ 3 không còn `chuaLam: true`.**
-Các mục còn cờ đó (Khám phá, Trang giới thiệu, Liên kết tiếp thị, Người dùng app, Kiểm duyệt,
-Sản phẩm, Đơn hàng) thuộc **GĐ 4/5/7/8** — cần dựng collection và module backend hoàn toàn mới
-(`discover_items`, `articles`, `affiliate_links`, `users`, `reports`, `products`, `orders`),
-ngoài phạm vi "hoàn thiện Web Admin" của GĐ 3. Việc kế tiếp hợp lý là bắt đầu **GĐ 4 — CMS và
-web giới thiệu**, hoặc **GĐ 5 — ứng dụng mobile lõi chăm cây** (xem bảng "Trình tự dựng" ở dưới).
+**Toàn bộ menu Web Admin đã hoàn thiện — không còn `chuaLam: true` nào trong
+`FE/src/lib/vai-tro.ts`.** Việc kế tiếp hợp lý là bắt đầu **GĐ 5 — ứng dụng mobile lõi chăm
+cây** (khảo sát, vườn của tôi, lịch chăm sóc — các API đã sẵn sàng từ GĐ 1-3) hoặc **GĐ 4 —
+web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có), xem bảng "Trình tự dựng"
+ở dưới. Sau khi hai giai đoạn đó triển khai, quay lại đối chiếu schema `nguoi-dung`/`kiem-duyet`/
+`don-hang` với dữ liệu thật thay vì suy đoán như hiện tại.
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
@@ -112,6 +130,7 @@ lẫn cơ sở dữ liệu thật. `npm run nhap:cay -- --thu` cũng chạy đư
 | Hệ thiết kế (màu, chữ, component) | `FE/src/app/globals.css` |
 | Khai báo menu và quyền theo vai | `FE/src/lib/vai-tro.ts` |
 | Gọi API từ phía server Next.js | `FE/src/lib/api.ts` |
+| Nút xoá dùng chung (hỏi xác nhận + gọi Server Action) | `FE/src/components/nut-xoa.tsx` |
 | Bản sao enum của BE cho dropdown form (đối chiếu tự động, khớp 100%) | `FE/src/lib/hang-so.ts` |
 | Định dạng ngày/tiền dùng chung | `FE/src/lib/dinh-dang.ts` |
 | Form thêm/sửa cây, 33 trường chia 11 khối | `FE/src/app/(quan-tri)/cay-trong/form-cay.tsx` |
@@ -179,6 +198,13 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 | Gợi ý | `POST goi-y` |
 | Cấu hình | `GET cau-hinh` · `PATCH cau-hinh` |
 | Nhật ký | `GET nhat-ky` |
+| Liên kết tiếp thị | `GET/POST lien-ket-tiep-thi` · `GET/PATCH/DELETE lien-ket-tiep-thi/:id` |
+| Khám phá | `GET/POST kham-pha` · `GET/PATCH/DELETE kham-pha/:id` |
+| Trang giới thiệu | `GET/POST trang-gioi-thieu` · `GET/PATCH/DELETE trang-gioi-thieu/:duongDan` |
+| Sản phẩm | `GET/POST san-pham` · `GET/PATCH/DELETE san-pham/:id` |
+| Người dùng app | `GET nguoi-dung` · `GET nguoi-dung/:id` · `PATCH /:id/khoa` · `/:id/kich-hoat` |
+| Kiểm duyệt | `GET kiem-duyet` · `PATCH kiem-duyet/:id` |
+| Đơn hàng | `GET don-hang` · `GET don-hang/:id` · `PATCH don-hang/:id/trang-thai` |
 | Sức khoẻ | `GET health` (công khai) |
 
 ---
