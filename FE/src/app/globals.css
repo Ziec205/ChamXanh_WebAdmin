@@ -836,3 +836,70 @@ code {
    ============================================================ */
 .cac-khoi-cau-hinh { max-width: 900px; }
 .cac-khoi-cau-hinh .hang-nut-form { align-items: center; margin-top: var(--k4); }
+
+/* ============================================================
+   Nhật ký thao tác
+   ============================================================ */
+.thanh-loc-nhat-ky {
+  display: flex;
+  gap: var(--k3);
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin: var(--k5) 0 var(--k4);
+}
+.thanh-loc-nhat-ky .truong { min-width: 180px; }
+.thanh-loc-nhat-ky select {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 14px;
+  min-height: 42px;
+  border: 1px solid var(--vien-sage);
+  border-radius: var(--bo-vua);
+  background: var(--mat);
+  color: var(--muc);
+}
+.thanh-loc-nhat-ky input {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 14px;
+  min-height: 42px;
+  border: 1px solid var(--vien-sage);
+  border-radius: var(--bo-vua);
+  background: var(--mat);
+  color: var(--muc);
+  width: 100%;
+}
+.thanh-loc-nhat-ky .nut { min-height: 42px; padding: 9px 16px; }
+
+.chi-tiet-thay-doi summary {
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--xanh-dam);
+  font-weight: 600;
+}
+.chi-tiet-thay-doi summary:hover { text-decoration: underline; }
+.noi-dung-thay-doi {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--k3);
+  margin-top: var(--k3);
+  min-width: 380px;
+}
+.noi-dung-thay-doi pre {
+  font-family: var(--chu-so);
+  font-size: 11px;
+  background: var(--mat-phu);
+  padding: var(--k2);
+  border-radius: var(--bo-nho);
+  overflow-x: auto;
+  margin: 4px 0 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.phan-trang {
+  display: flex;
+  align-items: center;
+  gap: var(--k4);
+  margin-top: var(--k5);
+}

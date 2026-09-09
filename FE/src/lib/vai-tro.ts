@@ -60,7 +60,7 @@ export const MENU: { nhom: string; muc: MucMenu[] }[] = [
     muc: [
       { duongDan: '/tai-khoan-quan-tri', nhan: 'Tài khoản quản trị', vaiDuocPhep: ['admin'] },
       { duongDan: '/cau-hinh', nhan: 'Cấu hình', vaiDuocPhep: ['admin'] },
-      { duongDan: '/nhat-ky', nhan: 'Nhật ký thao tác', vaiDuocPhep: ['admin'], chuaLam: true },
+      { duongDan: '/nhat-ky', nhan: 'Nhật ký thao tác', vaiDuocPhep: ['admin'] },
     ],
   },
 ];
