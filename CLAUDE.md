@@ -10,13 +10,15 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 
 ## Trạng thái hiện tại
 
-**GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.**
+**GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.
+GĐ 5 đang chạy — nền tảng + xác thực mobile xong.**
 
-**81 kiểm thử đơn vị + 112 kiểm thử đầu cuối — tất cả xanh.** Typecheck, lint và build sạch cả
-BE lẫn FE, kể cả `next build` production.
+**81 kiểm thử đơn vị + 125 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+lint và build sạch cả BE lẫn FE, kể cả `next build` production. Mobile: typecheck/lint sạch,
+`expo-doctor` 21/21, bundle Metro thành công.
 
-**Đã push lên GitHub** (ChamXanh_WebAdmin, 09/09/2026, commit `a067800`). Hai repo
-ChamXanh_Mobile (`1de04d2`) và ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
+**Đã push lên GitHub**: ChamXanh_WebAdmin (10/09/2026, commit `0da6e82`), ChamXanh_Mobile
+(10/09/2026, commit `bff9fc1`). ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
 
 > **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
 > saving a routine that uses a GitHub repository`. Tài khoản Claude của người dùng chưa liên kết
@@ -69,19 +71,36 @@ ChamXanh_Mobile (`1de04d2`) và ChamXanh_WebIntroduce (`d43bcee`) vẫn ở tr�
   Schema hiện tại là suy đoán hợp lý theo "Cấu trúc dữ liệu", cần đối chiếu lại khi hai giai
   đoạn đó thật sự triển khai. `don-hang` tương tự — chưa có luồng đặt đơn thật (GĐ 7), Admin
   hiện chỉ quản lý trạng thái.
+- **GĐ 5 — bắt đầu ứng dụng mobile, lát cắt nền tảng + xác thực** (chọn làm trước theo xác
+  nhận của người dùng, vì mọi màn hình khác đều cần đăng nhập trước):
+  - **BE — xác thực người dùng app, tách hoàn toàn khỏi Web Admin**: `POST auth-app/dang-ky`
+    · `/dang-nhap` · `/lam-moi` (xoay vòng) · `/dang-xuat` · `/dang-xuat-moi-thiet-bi` ·
+    `POST auth-app/doi-mat-khau` (thu hồi toàn bộ phiên) · `DELETE auth-app/xoa-tai-khoan`
+    (xoá vĩnh viễn, bắt gõ lại mật khẩu — Apple 5.1.1v) · `GET auth-app/toi`.
+    JWT riêng (`JWT_APP_ACCESS_SECRET`, khác cả hai khoá Web Admin), collection refresh token
+    riêng (`user_refresh_tokens`), Passport strategy/guard riêng (`jwt-app`). Khoá tạm 15 phút
+    sau 5 lần đăng nhập sai, giống hệt cơ chế Web Admin. Mở rộng schema `NguoiDung` (đã có từ
+    trang Web Admin `/nguoi-dung`) thêm `matKhauBam`/`lanDangNhapCuoi`/`khoaToi`.
+  - **Mobile — khung Expo Router mới dựng từ đầu** (repo trước đó trống hoàn toàn):
+    Expo Router + TypeScript, `Stack.Protected` tự điều hướng theo trạng thái đăng nhập,
+    5 tab (Trang chủ/Vườn/Trợ lý/Chợ/Cộng đồng), Cá nhân qua ảnh đại diện góc trên trái (đổi
+    mật khẩu, đăng xuất, xoá tài khoản). `lib/api.ts` tự làm mới access token khi hết hạn.
+    `lib/mau.ts` copy chính xác hệ màu từ `FE/src/app/globals.css`.
+  - Các tab Vườn/Trợ lý/Chợ/Cộng đồng còn là màn giữ chỗ — việc tiếp theo của GĐ 5 là dựng
+    Vườn của tôi (`user_plants`, `care_tasks`) và luồng khảo sát nhập môn ngay trong app.
 
 ## Việc kế tiếp
 
-**Toàn bộ menu Web Admin đã hoàn thiện — không còn `chuaLam: true` nào trong
-`FE/src/lib/vai-tro.ts`.** Việc kế tiếp hợp lý là bắt đầu **GĐ 5 — ứng dụng mobile lõi chăm
-cây** (khảo sát, vườn của tôi, lịch chăm sóc — các API đã sẵn sàng từ GĐ 1-3) hoặc **GĐ 4 —
-web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có), xem bảng "Trình tự dựng"
-ở dưới. Sau khi hai giai đoạn đó triển khai, quay lại đối chiếu schema `nguoi-dung`/`kiem-duyet`/
-`don-hang` với dữ liệu thật thay vì suy đoán như hiện tại.
+GĐ 5 đã xong lát cắt nền tảng + xác thực. Việc kế tiếp hợp lý: dựng **Vườn của tôi** trong
+app — collection `user_plants`/`care_tasks`/`care_guides`/`care_basket` ở BE (chưa có), màn
+khảo sát nhập môn nối API `/goi-y` đã sẵn từ GĐ 2, rồi màn Vườn hiển thị lịch chăm sóc. Sau khi
+Vườn dùng thật ổn định mới sang Trợ lý (GĐ 6) hoặc Chợ Vật Tư (GĐ 7). Song song có thể làm
+**GĐ 4 — web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có). Sau khi mobile
+và cộng đồng (GĐ 8) triển khai, quay lại đối chiếu schema `nguoi-dung`/`kiem-duyet`/`don-hang`
+ở Web Admin với dữ liệu thật thay vì suy đoán như hiện tại.
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
-- Xoá tài khoản người dùng app (Apple 5.1.1v) — cần collection `users`, thuộc GĐ 5
 - Quên mật khẩu qua Resend — cần tên miền để thư không vào hộp rác
 - Agent đám mây chạy theo lịch — cần liên kết GitHub với tài khoản Claude
 
@@ -137,6 +156,18 @@ lẫn cơ sở dữ liệu thật. `npm run nhap:cay -- --thu` cũng chạy đư
 | Form thử thuật toán gợi ý | `FE/src/app/(quan-tri)/thu-goi-y/form-thu-goi-y.tsx` |
 | Sửa câu hỏi khảo sát tại chỗ (accordion) | `FE/src/app/(quan-tri)/khao-sat/the-cau-hoi.tsx` |
 | 5 khối cấu hình, mỗi khối tự lưu riêng | `FE/src/app/(quan-tri)/cau-hinh/form-cau-hinh.tsx` |
+| Xác thực người dùng app (đăng ký/đăng nhập/đổi mật khẩu/xoá tài khoản) | `BE/src/modules/nguoi-dung/nguoi-dung-auth.service.ts` + `.controller.ts` |
+| JWT strategy/guard riêng cho app (khác Web Admin) | `BE/src/modules/nguoi-dung/strategies/jwt-app.strategy.ts` |
+
+Trong `ChamXanh_Mobile/`:
+
+| Việc cần làm | Tệp |
+|---|---|
+| Gọi API + tự làm mới token khi hết hạn | `lib/api.ts` |
+| Trạng thái đăng nhập toàn app | `lib/auth-context.tsx` |
+| Hệ màu (copy từ Web Admin, không tự đặt màu mới) | `lib/mau.ts` |
+| Điều hướng theo trạng thái đăng nhập (`Stack.Protected`) | `app/_layout.tsx` |
+| Khung 5 tab | `app/(tabs)/_layout.tsx` |
 
 **Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
 được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
@@ -191,7 +222,8 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 
 | Nhóm | Đường dẫn |
 |---|---|
-| Xác thực | `POST auth/dang-nhap` · `auth/lam-moi` · `auth/dang-xuat` · `auth/doi-mat-khau` · `GET auth/toi` |
+| Xác thực (Web Admin) | `POST auth/dang-nhap` · `auth/lam-moi` · `auth/dang-xuat` · `auth/doi-mat-khau` · `GET auth/toi` |
+| Xác thực (app, tách riêng) | `POST auth-app/dang-ky` · `/dang-nhap` · `/lam-moi` · `/dang-xuat` · `/doi-mat-khau` · `DELETE /xoa-tai-khoan` · `GET /toi` |
 | Tài khoản quản trị | `GET/POST admin-users` · `PATCH admin-users/:id/vo-hieu-hoa` · `/kich-hoat` |
 | Cây trồng | `GET cay-trong` · `cay-trong/thong-ke` · `cay-trong/:ma` · `POST cay-trong` · `PATCH cay-trong/:ma` |
 | Khảo sát | `GET khao-sat/cau-hoi` · `/tat-ca` · `PATCH khao-sat/cau-hoi/:khoa` · `POST /nap-mac-dinh` |
