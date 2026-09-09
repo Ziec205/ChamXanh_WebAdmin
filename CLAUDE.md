@@ -10,12 +10,24 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 
 ## Trạng thái hiện tại
 
-**GĐ 0 và GĐ 2 xong. GĐ 1 xong phần không bị chặn.** Ba repo đã có commit (**chưa push lên GitHub**).
+**GĐ 0 và GĐ 2 xong. GĐ 1 xong phần không bị chặn.**
 
 **81 kiểm thử đơn vị + 50 kiểm thử đầu cuối — tất cả xanh.** Typecheck và build sạch cả BE lẫn FE.
 
+**Cả ba repo đã push lên GitHub** (09/09/2026):
+
+| Repo | Commit trên `main` |
+|---|---|
+| ChamXanh_WebAdmin | `25df062` |
+| ChamXanh_Mobile | `1de04d2` |
+| ChamXanh_WebIntroduce | `d43bcee` |
+
 > **Đang tạm dừng.** Người dùng yêu cầu nghỉ lúc 15:41 ngày 09/09/2026, hẹn làm tiếp **18:15 cùng ngày**.
 > Việc kế tiếp đã chọn: **GĐ 3 — hoàn thiện Web Admin** (xem mục "Việc kế tiếp" bên dưới).
+>
+> **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
+> saving a routine that uses a GitHub repository`. Tài khoản Claude của người dùng chưa liên kết
+> GitHub. Cần vào https://claude.ai/customize/connectors kết nối trước, rồi tạo lại routine.
 
 Đã hoàn thành:
 - Chốt toàn bộ phạm vi, kiến trúc, mô hình doanh thu
@@ -60,8 +72,9 @@ Làm xong mục nào thì bỏ cờ đó đi.
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
 - Xoá tài khoản người dùng app (Apple 5.1.1v) — cần collection `users`, thuộc GĐ 5
 - Quên mật khẩu qua Resend — cần tên miền để thư không vào hộp rác
+- Agent đám mây chạy theo lịch — cần liên kết GitHub với tài khoản Claude
 
-Chưa làm: mua tài khoản Apple / Google Developer, tên miền, đẩy mã lên GitHub.
+Chưa làm: mua tài khoản Apple / Google Developer, tên miền.
 
 ### Chạy thử ngay
 
@@ -320,6 +333,10 @@ Hệ màu lấy từ bản render (file chưa khai báo Figma variable): xanh l�
 |---|---|
 | `dac-ta-cham-xanh.html` | Đặc tả kỹ thuật đầy đủ — nguồn sự thật |
 | `du-lieu-cay-trong.xlsx` | Bảng nhập dữ liệu cây · 33 cột · 24 loài nháp · 4 sheet |
+
+**Bản sao trong repo:** `CLAUDE.md` và `Document/` được nhân bản vào `ChamXanh_WebAdmin/`, vì agent
+đám mây và người clone lẻ repo đó không thấy được thư mục gốc trên máy. **Bản ở thư mục gốc này là
+bản chính** — sửa ở đây trước rồi đồng bộ sang. Script `nhap:cay` tự tìm tệp Excel ở cả hai bố cục.
 
 **Về file Excel:** 24 dòng có sẵn là **dữ liệu nháp do máy soạn**, cột `daKiemChung` đang để `không`. Phải có người thật đối chiếu ít nhất hai nguồn đáng tin cậy trước khi đổi thành `có` và đưa vào dùng thật.
 
