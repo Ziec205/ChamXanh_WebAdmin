@@ -4,6 +4,7 @@ import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
+import { DoiMatKhauDto } from './dto/doi-mat-khau.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CurrentUser, AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
 
@@ -43,6 +44,16 @@ export class AuthController {
   @ApiOperation({ summary: 'Thu hồi toàn bộ phiên đăng nhập của tài khoản' })
   async dangXuatMoiThietBi(@CurrentUser('id') id: string) {
     await this.auth.dangXuatMoiThietBi(id);
+  }
+
+  @Post('doi-mat-khau')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({
+    summary: 'Đổi mật khẩu',
+    description: 'Đổi xong mọi phiên đăng nhập đều bị thu hồi, kể cả phiên hiện tại.',
+  })
+  async doiMatKhau(@CurrentUser('id') id: string, @Body() dto: DoiMatKhauDto) {
+    await this.auth.doiMatKhau(id, dto);
   }
 
   @Get('toi')

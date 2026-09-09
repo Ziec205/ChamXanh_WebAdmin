@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,6 +8,7 @@ import { AdminUsersService } from 'src/modules/admin-users/admin-users.service';
 import { AdminUserDocument } from 'src/modules/admin-users/schemas/admin-user.schema';
 import { RefreshToken, RefreshTokenDocument } from './schemas/refresh-token.schema';
 import { LoginDto } from './dto/login.dto';
+import { DoiMatKhauDto } from './dto/doi-mat-khau.dto';
 import { ttlSangMiliGiay } from 'src/common/utils/ttl.util';
 
 /**
@@ -79,6 +80,27 @@ export class AuthService {
     await banGhi.save();
 
     return this.phatToken(nguoiDung, thietBi);
+  }
+
+  /**
+   * Đổi mật khẩu.
+   *
+   * Đổi xong thu hồi TOÀN BỘ phiên đăng nhập, kể cả phiên hiện tại: nếu người
+   * dùng đổi mật khẩu vì nghi bị chiếm tài khoản, kẻ kia phải bị đá ra ngay.
+   */
+  async doiMatKhau(id: string, dto: DoiMatKhauDto): Promise<void> {
+    const nguoiDung = await this.adminUsers.findByIdWithPassword(id);
+    if (!nguoiDung) throw new UnauthorizedException('Tài khoản không còn hiệu lực.');
+
+    const dung = await this.adminUsers.soSanhMatKhau(dto.matKhauHienTai, nguoiDung.matKhauBam);
+    if (!dung) throw new UnauthorizedException('Mật khẩu hiện tại không đúng.');
+
+    if (dto.matKhauHienTai === dto.matKhauMoi) {
+      throw new BadRequestException('Mật khẩu mới phải khác mật khẩu hiện tại.');
+    }
+
+    await this.adminUsers.doiMatKhau(id, dto.matKhauMoi);
+    await this.dangXuatMoiThietBi(id);
   }
 
   async dangXuat(refreshToken: string): Promise<void> {

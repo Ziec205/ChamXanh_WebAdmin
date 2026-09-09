@@ -11,6 +11,8 @@ import { HealthModule } from './modules/health/health.module';
 import { PlantsModule } from './modules/plants/plants.module';
 import { KhaoSatModule } from './modules/khao-sat/khao-sat.module';
 import { GoiYModule } from './modules/goi-y/goi-y.module';
+import { NhatKyModule } from './modules/nhat-ky/nhat-ky.module';
+import { CauHinhModule } from './modules/cau-hinh/cau-hinh.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -41,6 +43,9 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     }),
     AuthModule,
     AdminUsersModule,
+    // Global — phải nạp trước các module dùng tới chúng.
+    NhatKyModule,
+    CauHinhModule,
     HealthModule,
     PlantsModule,
     KhaoSatModule,

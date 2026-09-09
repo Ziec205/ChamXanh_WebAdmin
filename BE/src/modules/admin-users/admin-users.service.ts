@@ -68,6 +68,17 @@ export class AdminUsersService {
       .exec();
   }
 
+  /** Đổi mật khẩu. Gọi xong PHẢI thu hồi mọi phiên đăng nhập cũ. */
+  async doiMatKhau(id: string, matKhauMoi: string): Promise<void> {
+    const matKhauBam = await bcrypt.hash(matKhauMoi, BCRYPT_ROUNDS);
+    await this.model.updateOne({ _id: id }, { matKhauBam }).exec();
+  }
+
+  /** Lấy kèm mật khẩu băm theo id — dùng khi xác nhận mật khẩu hiện tại. */
+  findByIdWithPassword(id: string) {
+    return this.model.findById(id).select('+matKhauBam').exec();
+  }
+
   async doiTrangThai(id: string, dangHoatDong: boolean) {
     const nguoiDung = await this.findById(id);
     nguoiDung.dangHoatDong = dangHoatDong;
