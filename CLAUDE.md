@@ -10,21 +10,14 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 
 ## Trạng thái hiện tại
 
-**GĐ 0 và GĐ 2 xong. GĐ 1 xong phần không bị chặn.**
+**GĐ 0, GĐ 2, GĐ 3 xong. GĐ 1 xong phần không bị chặn.**
 
-**81 kiểm thử đơn vị + 50 kiểm thử đầu cuối — tất cả xanh.** Typecheck và build sạch cả BE lẫn FE.
+**81 kiểm thử đơn vị + 78 kiểm thử đầu cuối — tất cả xanh.** Typecheck, lint và build sạch cả
+BE lẫn FE, kể cả `next build` production.
 
-**Cả ba repo đã push lên GitHub** (09/09/2026):
+**Đã push lên GitHub** (ChamXanh_WebAdmin, 09/09/2026, commit `cf5694b`). Hai repo
+ChamXanh_Mobile (`1de04d2`) và ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
 
-| Repo | Commit trên `main` |
-|---|---|
-| ChamXanh_WebAdmin | `25df062` |
-| ChamXanh_Mobile | `1de04d2` |
-| ChamXanh_WebIntroduce | `d43bcee` |
-
-> **Đang tạm dừng.** Người dùng yêu cầu nghỉ lúc 15:41 ngày 09/09/2026, hẹn làm tiếp **18:15 cùng ngày**.
-> Việc kế tiếp đã chọn: **GĐ 3 — hoàn thiện Web Admin** (xem mục "Việc kế tiếp" bên dưới).
->
 > **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
 > saving a routine that uses a GitHub repository`. Tài khoản Claude của người dùng chưa liên kết
 > GitHub. Cần vào https://claude.ai/customize/connectors kết nối trước, rồi tạo lại routine.
@@ -38,35 +31,35 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 - Rút design token thật từ Figma node `136:2860`
 - **API NestJS**: kiểm tra biến môi trường lúc khởi động, đăng nhập email + JWT xoay vòng,
   phân quyền 3 vai, khoá tạm sau 5 lần sai, giới hạn tần suất, kiểm tra sức khoẻ, Swagger
-- **Web Admin Next.js**: xác thực BFF bằng cookie httpOnly, hệ thiết kế, menu theo vai,
-  màn đăng nhập, bảng điều khiển, trang tài khoản quản trị, trang cây trồng
 - **GĐ 2 — dữ liệu cây và thuật toán gợi ý**:
   - `plants` (33 trường), `survey_questions`, `user_profiles`
   - Script `npm run nhap:cay` đọc thẳng từ tệp Excel, có chế độ `--thu` chỉ soát không ghi
   - Bộ chấm điểm và bộ sinh lịch viết bằng **hàm thuần**, kiểm thử không cần database
   - 9 câu hỏi khảo sát mặc định, Admin sửa nội dung được nhưng không đổi được khoá
-
-- **GĐ 1 phần còn lại (làm xong 09/09)**:
+- **GĐ 1 phần còn lại**:
   - `app_config` — hạn mức AI, giá gói, **trọng số gợi ý**, công tắc tính năng, thông báo bảo trì.
     Có bộ nhớ tạm 30 giây, xoá ngay khi Admin sửa. Trọng số đã nối thật vào bộ chấm điểm.
   - `audit_logs` — ghi ai sửa gì, kèm giá trị trước và sau. Chỉ ghi trường thật sự đổi.
     Tự dọn sau một năm. Ghi nhật ký hỏng **không được** làm hỏng thao tác nghiệp vụ.
   - Đổi mật khẩu — đổi xong thu hồi **toàn bộ** phiên, kể cả phiên hiện tại.
+- **GĐ 3 — hoàn thiện Web Admin, cả 5/5 việc ưu tiên** (chi tiết ở mục riêng bên dưới):
+  1. `/thu-goi-y` — thử thuật toán gợi ý không cần lập trình viên
+  2. `/cay-trong/moi` + `/cay-trong/[ma]` — form thêm/sửa cây, 33 trường
+  3. `/khao-sat` — quản lý câu hỏi khảo sát, sửa tại chỗ kiểu accordion
+  4. `/cau-hinh` — hạn mức AI, giá gói, trọng số, công tắc tính năng, bảo trì
+  5. `/nhat-ky` — xem nhật ký thao tác, lọc theo đối tượng/email
+- Đồng thời vá xong lỗ hổng validation: `cay-trong` và `khao-sat` trước đây nhận
+  `Partial<Plant>`/`Partial<CauHoi>` không có DTO, `ValidationPipe` không lọc được gì. Đã thêm
+  `CreatePlantDto`/`UpdatePlantDto`/`CapNhatCauHoiDto` đầy đủ ràng buộc.
 
-## Việc kế tiếp — GĐ 3: hoàn thiện Web Admin
+## Việc kế tiếp
 
-Ưu tiên theo thứ tự:
-
-1. **Trang thử gợi ý** (`/thu-goi-y`) — quan trọng nhất. Form nhập câu trả lời khảo sát,
-   hiện kết quả kèm điểm, câu giải thích, danh sách bị loại và lý do. Để đội nội dung tự
-   kiểm tra thuật toán mà không cần lập trình viên.
-2. **Form thêm/sửa cây** — hiện mới chỉ có trang danh sách, chưa sửa được trên giao diện.
-3. **Trang quản lý câu hỏi khảo sát** — sửa nội dung, thứ tự, đáp án.
-4. **Trang cấu hình** — chỉnh hạn mức, giá gói, trọng số, công tắc tính năng.
-5. **Trang nhật ký thao tác**.
-
-Menu đã khai sẵn các mục này trong `FE/src/lib/vai-tro.ts`, đánh dấu `chuaLam: true`.
-Làm xong mục nào thì bỏ cờ đó đi.
+GĐ 3 đã xong 100% — **toàn bộ menu Web Admin thuộc phạm vi GĐ 3 không còn `chuaLam: true`.**
+Các mục còn cờ đó (Khám phá, Trang giới thiệu, Liên kết tiếp thị, Người dùng app, Kiểm duyệt,
+Sản phẩm, Đơn hàng) thuộc **GĐ 4/5/7/8** — cần dựng collection và module backend hoàn toàn mới
+(`discover_items`, `articles`, `affiliate_links`, `users`, `reports`, `products`, `orders`),
+ngoài phạm vi "hoàn thiện Web Admin" của GĐ 3. Việc kế tiếp hợp lý là bắt đầu **GĐ 4 — CMS và
+web giới thiệu**, hoặc **GĐ 5 — ứng dụng mobile lõi chăm cây** (xem bảng "Trình tự dựng" ở dưới).
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
@@ -119,10 +112,48 @@ lẫn cơ sở dữ liệu thật. `npm run nhap:cay -- --thu` cũng chạy đư
 | Hệ thiết kế (màu, chữ, component) | `FE/src/app/globals.css` |
 | Khai báo menu và quyền theo vai | `FE/src/lib/vai-tro.ts` |
 | Gọi API từ phía server Next.js | `FE/src/lib/api.ts` |
+| Bản sao enum của BE cho dropdown form (đối chiếu tự động, khớp 100%) | `FE/src/lib/hang-so.ts` |
+| Định dạng ngày/tiền dùng chung | `FE/src/lib/dinh-dang.ts` |
+| Form thêm/sửa cây, 33 trường chia 11 khối | `FE/src/app/(quan-tri)/cay-trong/form-cay.tsx` |
+| Form thử thuật toán gợi ý | `FE/src/app/(quan-tri)/thu-goi-y/form-thu-goi-y.tsx` |
+| Sửa câu hỏi khảo sát tại chỗ (accordion) | `FE/src/app/(quan-tri)/khao-sat/the-cau-hoi.tsx` |
+| 5 khối cấu hình, mỗi khối tự lưu riêng | `FE/src/app/(quan-tri)/cau-hinh/form-cau-hinh.tsx` |
 
 **Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
 được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
 vào service.
+
+### Mẫu mutation ở Web Admin — Server Action, không phải Route Handler
+
+Mọi form sửa dữ liệu (thêm/sửa cây, sửa câu hỏi, sửa cấu hình) dùng **Next.js Server Action**
+(`'use server'` trong một tệp `actions.ts` cạnh `page.tsx`), KHÔNG viết thêm Route Handler
+proxy trong `app/api/*` — Server Action chạy trên server nên gọi thẳng `goiApi()` (đã đọc cookie
+httpOnly) y hệt các trang chỉ đọc. Route Handler chỉ tồn tại cho hai việc: đăng nhập/đăng xuất
+(nơi cookie được **đặt** lần đầu, phải qua `NextResponse.cookies.set`).
+
+Mẫu chuẩn một action:
+```ts
+'use server';
+import { goiApi, LoiApi } from '@/lib/api';
+
+export async function suaX(id: string, du_lieu: DuLieu): Promise<{thanhCong:true}|{thanhCong:false;loi:string}> {
+  try {
+    await goiApi(`/duong-dan/${id}`, { method: 'PATCH', body: JSON.stringify(du_lieu) });
+  } catch (e) {
+    return { thanhCong: false, loi: (e as LoiApi).message ?? 'Không lưu được.' };
+  }
+  revalidatePath('/duong-dan');
+  return { thanhCong: true };
+}
+```
+Không bao giờ ném lỗi thẳng ra Client Component — luôn bắt và trả `{thanhCong:false, loi}` để
+form tự hiện banner `.bao-loi`, người dùng không thấy màn trắng lỗi Next.js.
+
+**Kiểm thử Server Action không dùng Jest được** (cần trình duyệt để lấy action ID). Cách đã dùng
+trong phiên này: build production (`next build`) rồi đọc action ID thật từ
+`.next/server/server-reference-manifest.json`, gọi thẳng qua giao thức `Next-Action` bằng curl
+(header `Next-Action: <id>`, body là `JSON.stringify([...cácThamSố])`). Xem lịch sử commit GĐ 3
+để thấy ví dụ đầy đủ.
 
 ### Quy ước API
 
