@@ -85,7 +85,11 @@ describe('Người dùng, kiểm duyệt, sản phẩm, đơn hàng (đầu cu�
 
     it('tạo trực tiếp trong Mongo để mô phỏng người dùng có sẵn, rồi tra cứu qua API', async () => {
       const model = app.get<Model<NguoiDungDocument>>(getModelToken(NguoiDung.name));
-      const nd = await model.create({ email: 'khach-hang@nguoidung-test.vn', hoTen: 'Khách Test' });
+      const nd = await model.create({
+        email: 'khach-hang@nguoidung-test.vn',
+        hoTen: 'Khách Test',
+        matKhauBam: 'khong-dung-de-dang-nhap',
+      });
       id = String(nd._id);
 
       const res = await http

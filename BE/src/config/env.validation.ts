@@ -38,6 +38,16 @@ class EnvironmentVariables {
 
   @IsString()
   JWT_REFRESH_TTL!: string;
+
+  @IsString()
+  @MinLength(32, { message: 'JWT_APP_ACCESS_SECRET phải dài ít nhất 32 ký tự' })
+  JWT_APP_ACCESS_SECRET!: string;
+
+  @IsString()
+  JWT_APP_ACCESS_TTL!: string;
+
+  @IsString()
+  JWT_APP_REFRESH_TTL!: string;
 }
 
 export function validateEnv(config: Record<string, unknown>) {
@@ -59,6 +69,12 @@ export function validateEnv(config: Record<string, unknown>) {
 
   if (parsed.JWT_ACCESS_SECRET === parsed.JWT_REFRESH_SECRET) {
     throw new Error('JWT_ACCESS_SECRET và JWT_REFRESH_SECRET phải khác nhau.');
+  }
+  if (
+    parsed.JWT_APP_ACCESS_SECRET === parsed.JWT_ACCESS_SECRET ||
+    parsed.JWT_APP_ACCESS_SECRET === parsed.JWT_REFRESH_SECRET
+  ) {
+    throw new Error('JWT_APP_ACCESS_SECRET phải khác cả hai khoá JWT của Web Admin.');
   }
 
   return parsed;

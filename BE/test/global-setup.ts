@@ -17,4 +17,7 @@ export default async function () {
   process.env.JWT_REFRESH_SECRET = 'khoa_lam_moi_KHAC_danh_rieng_cho_kiem_thu_0987654321';
   process.env.JWT_ACCESS_TTL = '15m';
   process.env.JWT_REFRESH_TTL = '30d';
+  process.env.JWT_APP_ACCESS_SECRET = 'khoa_truy_cap_app_danh_rieng_cho_kiem_thu_abcdefghij';
+  process.env.JWT_APP_ACCESS_TTL = '30m';
+  process.env.JWT_APP_REFRESH_TTL = '60d';
 }

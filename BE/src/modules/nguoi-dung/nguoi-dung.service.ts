@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
+import * as bcrypt from 'bcrypt';
 import { NguoiDung, NguoiDungDocument } from './schemas/nguoi-dung.schema';
 import { KhoaNguoiDungDto } from './dto/khoa-nguoi-dung.dto';
 import { NhatKyService } from '../nhat-ky/nhat-ky.service';
 import type { AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
+
+const BCRYPT_ROUNDS = 12;
+const SO_LAN_SAI_TOI_DA = 5;
+const THOI_GIAN_KHOA_PHUT = 15;
 
 @Injectable()
 export class NguoiDungService {
@@ -12,6 +17,58 @@ export class NguoiDungService {
     @InjectModel(NguoiDung.name) private readonly model: Model<NguoiDungDocument>,
     private readonly nhatKy: NhatKyService,
   ) {}
+
+  /** Đăng ký tài khoản mới cho người dùng app — KHÔNG dùng để tạo tài khoản quản trị. */
+  async dangKy(email: string, matKhau: string, hoTen?: string) {
+    const daTonTai = await this.model.exists({ email: email.toLowerCase() });
+    if (daTonTai) throw new ConflictException(`Email ${email} đã được dùng cho một tài khoản khác.`);
+
+    const matKhauBam = await bcrypt.hash(matKhau, BCRYPT_ROUNDS);
+    return this.model.create({ email: email.toLowerCase(), matKhauBam, hoTen: hoTen ?? '' });
+  }
+
+  /** Lấy kèm mật khẩu băm — chỉ dùng trong luồng đăng nhập/đổi mật khẩu/xoá tài khoản. */
+  findByEmailWithPassword(email: string) {
+    return this.model.findOne({ email: email.toLowerCase() }).select('+matKhauBam').exec();
+  }
+
+  findByIdWithPassword(id: string) {
+    return this.model.findById(id).select('+matKhauBam').exec();
+  }
+
+  soSanhMatKhau(matKhauTho: string, matKhauBam: string) {
+    return bcrypt.compare(matKhauTho, matKhauBam);
+  }
+
+  dangBiKhoaTam(nd: NguoiDungDocument): boolean {
+    return !!nd.khoaToi && nd.khoaToi.getTime() > Date.now();
+  }
+
+  async ghiNhanDangNhapSai(nd: NguoiDungDocument) {
+    const soLan = nd.soLanDangNhapSai + 1;
+    const capNhat: Record<string, unknown> = { soLanDangNhapSai: soLan };
+    if (soLan >= SO_LAN_SAI_TOI_DA) {
+      capNhat.khoaToi = new Date(Date.now() + THOI_GIAN_KHOA_PHUT * 60_000);
+      capNhat.soLanDangNhapSai = 0;
+    }
+    await this.model.updateOne({ _id: nd._id }, capNhat).exec();
+  }
+
+  async ghiNhanDangNhapThanhCong(id: string) {
+    await this.model
+      .updateOne({ _id: id }, { lanDangNhapCuoi: new Date(), soLanDangNhapSai: 0, khoaToi: null })
+      .exec();
+  }
+
+  async doiMatKhauApp(id: string, matKhauMoi: string): Promise<void> {
+    const matKhauBam = await bcrypt.hash(matKhauMoi, BCRYPT_ROUNDS);
+    await this.model.updateOne({ _id: id }, { matKhauBam }).exec();
+  }
+
+  /** Xoá vĩnh viễn — Apple 5.1.1v yêu cầu xoá NGAY, không phải khoá mềm. */
+  async xoaVinhVien(id: string): Promise<void> {
+    await this.model.deleteOne({ _id: id }).exec();
+  }
 
   async danhSach(loc: { email?: string; trang?: number; moiTrang?: number }) {
     const dieuKien: FilterQuery<NguoiDungDocument> = {};
