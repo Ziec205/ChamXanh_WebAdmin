@@ -1,9 +1,10 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { KhaoSatService } from './khao-sat.service';
-import { CauHoi } from './schemas/cau-hoi.schema';
+import { CapNhatCauHoiDto } from './dto/cap-nhat-cau-hoi.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AdminRole } from '../admin-users/schemas/admin-user.schema';
+import { CurrentUser, type AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
 
 @ApiTags('Khảo sát nhập môn')
 @Controller('khao-sat')
@@ -26,8 +27,12 @@ export class KhaoSatController {
   @Patch('cau-hoi/:khoa')
   @Roles(AdminRole.Admin, AdminRole.Content)
   @ApiOperation({ summary: 'Sửa nội dung, thứ tự hoặc đáp án của một câu hỏi' })
-  capNhat(@Param('khoa') khoa: string, @Body() du_lieu: Partial<CauHoi>) {
-    return this.service.capNhat(khoa, du_lieu);
+  capNhat(
+    @Param('khoa') khoa: string,
+    @Body() du_lieu: CapNhatCauHoiDto,
+    @CurrentUser() nguoiDung: AuthenticatedUser,
+  ) {
+    return this.service.capNhat(khoa, du_lieu, nguoiDung);
   }
 
   @Post('cau-hoi/nap-mac-dinh')
