@@ -30,17 +30,44 @@ export class DongDonHang {
 }
 export const DongDonHangSchema = SchemaFactory.createForClass(DongDonHang);
 
+/** Chụp lại địa chỉ tại thời điểm đặt — đổi/xoá địa chỉ đã lưu sau đó không ảnh hưởng đơn cũ. */
+@Schema({ _id: false })
+export class DiaChiGiaoHang {
+  @Prop({ required: true, trim: true })
+  hoTen!: string;
+
+  @Prop({ required: true, trim: true })
+  soDienThoai!: string;
+
+  @Prop({ required: true, trim: true })
+  diaChiChiTiet!: string;
+
+  @Prop({ trim: true, default: '' })
+  phuongXa!: string;
+
+  @Prop({ trim: true, default: '' })
+  tinhThanh!: string;
+}
+export const DiaChiGiaoHangSchema = SchemaFactory.createForClass(DiaChiGiaoHang);
+
 export type DonHangDocument = HydratedDocument<DonHang>;
 
 /**
  * Đơn hàng Chợ Vật Tư. MoMo/COD dùng được trong app vì đây là hàng vật
- * lý, không phải nội dung số — xem "Nhật ký quyết định". Chưa có luồng
- * đặt đơn thật từ app (GĐ 7); Admin hiện chỉ xem và cập nhật trạng thái.
+ * lý, không phải nội dung số — xem "Nhật ký quyết định". Chỉ COD/chuyển
+ * khoản hoạt động thật (GĐ 7) — MoMo chờ tài khoản merchant thật, enum
+ * vẫn giữ để không phải đổi schema sau này.
  */
 @Schema({ collection: 'orders', timestamps: true })
 export class DonHang {
+  @Prop({ type: Types.ObjectId, ref: 'NguoiDung', required: true, index: true })
+  nguoiDungId!: Types.ObjectId;
+
   @Prop({ trim: true, default: '' })
   emailKhachHang!: string;
+
+  @Prop({ trim: true, default: 'chamxanh' })
+  vendorId!: string;
 
   @Prop({ type: [DongDonHangSchema], required: true, default: [] })
   danhSachHang!: DongDonHang[];
@@ -54,8 +81,8 @@ export class DonHang {
   @Prop({ default: TrangThaiDonHang.ChoXacNhan, enum: TrangThaiDonHang, index: true })
   trangThai!: TrangThaiDonHang;
 
-  @Prop({ trim: true, default: '' })
-  diaChiGiao!: string;
+  @Prop({ type: DiaChiGiaoHangSchema, required: true })
+  diaChiGiao!: DiaChiGiaoHang;
 }
 
 export const DonHangSchema = SchemaFactory.createForClass(DonHang);

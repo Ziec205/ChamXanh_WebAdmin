@@ -25,6 +25,8 @@ import { VuonModule } from './modules/vuon/vuon.module';
 import { HuongDanChamSocModule } from './modules/huong-dan-cham-soc/huong-dan-cham-soc.module';
 import { GioChoChamSocModule } from './modules/gio-cho-cham-soc/gio-cho-cham-soc.module';
 import { ThongBaoModule } from './modules/thong-bao/thong-bao.module';
+import { DiaChiModule } from './modules/dia-chi/dia-chi.module';
+import { GioHangModule } from './modules/gio-hang/gio-hang.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -68,6 +70,8 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     NguoiDungModule,
     KiemDuyetModule,
     SanPhamModule,
+    DiaChiModule,
+    GioHangModule,
     DonHangModule,
     VuonModule,
     HuongDanChamSocModule,

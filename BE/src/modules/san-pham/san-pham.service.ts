@@ -23,6 +23,22 @@ export class SanPhamService {
     return this.model.find({ nhom, dangBan: true }).limit(5).exec();
   }
 
+  /**
+   * Trừ tồn kho nguyên tử — chỉ thành công nếu còn đủ hàng, tránh bán âm
+   * khi nhiều đơn đặt cùng lúc. Dùng khi tạo đơn hàng ở Chợ Vật Tư.
+   */
+  async giamTonKho(id: string, soLuong: number): Promise<boolean> {
+    const ketQua = await this.model
+      .updateOne({ _id: id, dangBan: true, tonKho: { $gte: soLuong } }, { $inc: { tonKho: -soLuong } })
+      .exec();
+    return ketQua.modifiedCount > 0;
+  }
+
+  /** Hoàn lại tồn kho — dùng khi một đơn hàng tạo dở bị huỷ giữa chừng. */
+  async hoanTonKho(id: string, soLuong: number): Promise<void> {
+    await this.model.updateOne({ _id: id }, { $inc: { tonKho: soLuong } }).exec();
+  }
+
   async chiTiet(id: string) {
     const muc = await this.model.findById(id).exec();
     if (!muc) throw new NotFoundException('Không tìm thấy liên kết tiếp thị.');

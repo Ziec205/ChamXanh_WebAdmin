@@ -214,12 +214,18 @@ describe('Người dùng, kiểm duyệt, sản phẩm, đơn hàng (đầu cu�
     beforeAll(async () => {
       const model = app.get<Model<DonHangDocument>>(getModelToken(DonHang.name));
       const dh = await model.create({
+        nguoiDungId: '000000000000000000000099',
         emailKhachHang: 'khach@test.vn',
         danhSachHang: [
           { sanPhamId: '000000000000000000000001', tenSanPham: 'Đất trồng cây', gia: 45000, soLuong: 2 },
         ],
         tongTien: 90000,
         phuongThucThanhToan: 'cod',
+        diaChiGiao: {
+          hoTen: 'Khách Test',
+          soDienThoai: '0900000000',
+          diaChiChiTiet: '123 Đường Test, Quận 1',
+        },
       });
       id = String(dh._id);
     });
