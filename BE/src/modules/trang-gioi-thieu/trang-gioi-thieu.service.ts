@@ -24,6 +24,17 @@ export class TrangGioiThieuService {
     return muc;
   }
 
+  /** Danh mục công khai cho web giới thiệu — chỉ bài đã xuất bản. */
+  danhSachDaXuatBan() {
+    return this.model.find({ daXuatBan: true }).sort({ createdAt: -1 }).exec();
+  }
+
+  async chiTietDaXuatBan(duongDan: string) {
+    const muc = await this.model.findOne({ duongDan, daXuatBan: true }).exec();
+    if (!muc) throw new NotFoundException('Không tìm thấy bài viết.');
+    return muc;
+  }
+
   async taoMoi(du_lieu: CreateBaiVietDto, nguoiDung: AuthenticatedUser) {
     if (await this.model.exists({ duongDan: du_lieu.duongDan })) {
       throw new ConflictException(`Đường dẫn "${du_lieu.duongDan}" đã tồn tại.`);

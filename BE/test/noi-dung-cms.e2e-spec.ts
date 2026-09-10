@@ -225,6 +225,23 @@ describe('CMS — liên kết tiếp thị, khám phá, trang giới thiệu (đ
       expect(res.body.duLieu.tomTat).toBe('Tóm tắt mới');
     });
 
+    it('web giới thiệu KHÔNG thấy bài chưa xuất bản', async () => {
+      await http.get('/api/v1/trang-gioi-thieu-cong-khai/ve-cham-xanh').expect(404);
+      const ds = await http.get('/api/v1/trang-gioi-thieu-cong-khai').expect(200);
+      expect(ds.body.duLieu.find((b: { duongDan: string }) => b.duongDan === 've-cham-xanh')).toBeUndefined();
+    });
+
+    it('sau khi xuất bản, web giới thiệu thấy được', async () => {
+      await http
+        .patch('/api/v1/trang-gioi-thieu/ve-cham-xanh')
+        .set('Authorization', `Bearer ${tokenAdmin}`)
+        .send({ daXuatBan: true })
+        .expect(200);
+
+      const res = await http.get('/api/v1/trang-gioi-thieu-cong-khai/ve-cham-xanh').expect(200);
+      expect(res.body.duLieu.tomTat).toBe('Tóm tắt mới');
+    });
+
     it('xoá thành công', async () => {
       await http
         .delete('/api/v1/trang-gioi-thieu/ve-cham-xanh')
