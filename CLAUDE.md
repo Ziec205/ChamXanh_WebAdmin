@@ -19,7 +19,10 @@ GĐ 0 sang có mã nguồn thật). Còn thiếu ở GĐ 5: EAS dev build để 
 khoản Expo). Còn thiếu ở GĐ 7: MoMo (chờ tài khoản merchant thật — xem quyết định của người
 dùng bên dưới).
 
-**88 kiểm thử đơn vị + 174 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+**88 kiểm thử đơn vị + 175 kiểm thử đầu cuối (ChamXanh_WebAdmin) + 47 kiểm thử mobile — tất
+cả xanh.** Mobile trước đây KHÔNG có test nào; nay có `jest-expo` + React Native Testing
+Library (`npm test`, CI đã chạy): `lib/api.ts` (11 test, gồm tự làm mới token khi hết hạn và
+chống lặp vô tận), màn Chợ (10), Giỏ hàng (8), Thanh toán (8), Vườn (10). Typecheck,
 lint và build sạch cả BE lẫn FE, kể cả `next build` production và chạy thử `node dist/main.js`
 thật (không chỉ biên dịch) — bao gồm một lượt smoke test thật qua HTTP cho luồng Chợ Vật Tư
 (đăng ký → xem danh mục công khai → thêm giỏ → thêm địa chỉ → đặt đơn COD → tính tiền/trừ tồn
@@ -27,8 +30,8 @@ kho đúng → giỏ tự rỗng → xem lại đơn). Mobile: typecheck/lint s�
 Metro thành công (kể cả `expo export` thật cho Android, không chỉ biên dịch).
 
 **CI GitHub Actions xanh THẬT trên cả ba repo** (đã tự tay xác nhận qua GitHub API, không chỉ
-tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `e0fbfb3`, ChamXanh_Mobile
-commit `433bbc9`, ChamXanh_WebIntroduce commit `77e4306`, cả ba 10/09/2026.
+tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `b2eeaaa`, ChamXanh_Mobile
+commit `6e32ea5`, ChamXanh_WebIntroduce commit `77e4306`, cả ba 10/09/2026.
 
 **Đã chạy kiểm thử tích hợp toàn hệ thống ngày 10/09/2026 — 72/72 mục đạt.** Dựng MongoDB +
 BE production thật, nhập 24 loài cây từ Excel, rồi chạy qua HTTP thật 14 nhóm: sức khoẻ/xác
@@ -39,6 +42,13 @@ Admin đổi trạng thái đơn, nhật ký, cấu hình, web giới thiệu, x
 Web Admin (16 trang render 200 sau khi đăng nhập thật qua Route Handler, cookie httpOnly đặt
 đúng) và web giới thiệu (trang chủ/bài viết/2 trang pháp lý/404/webhook revalidate).
 **Lượt kiểm thử này tìm ra một lỗi thật** đã sửa — xem `@IsEnum` ở "Cạm bẫy đã biết".
+
+**Đã kiểm thử riêng ứng dụng mobile ngày 10/09/2026.** Ba lớp: (1) đối chiếu **hợp đồng dữ
+liệu** — 42/42 lời gọi API trong app so với phản hồi thật của BE đang chạy, xác nhận từng
+trường mà interface TypeScript khai báo có tồn tại và đúng kiểu (TS không kiểm được lúc chạy
+vì `goiApi<T>()` chỉ ép kiểu); (2) 47 test tự động cho lớp API và bốn màn hình chính; (3)
+typecheck/lint/expo-doctor/bundle Android + iOS. **Tìm ra hai lỗi thật**, cả hai đã sửa: sáu
+màn kẹt vòng xoay khi API hỏng, và `/auth-app/toi` thiếu `hoTen` — xem "Cạm bẫy đã biết".
 
 **Quyết định GĐ 7 — thanh toán:** người dùng chọn chỉ làm COD/chuyển khoản trước, MoMo để sau
 khi có tài khoản merchant thật — không dựng khung giả lập trước vì tốn thời gian cho thứ chưa
@@ -245,6 +255,10 @@ API ở `http://localhost:3001/api/v1`, Swagger ở `http://localhost:3001/api/d
 npx tsc --noEmit && npx jest && npx jest --config ./test/jest-e2e.json --runInBand && npx nest build
 # FE
 npx tsc --noEmit && npx next lint && npx next build
+# Mobile (ChamXanh_Mobile)
+npm run typecheck && npm run lint && npm test && npx expo-doctor
+# Web giới thiệu (ChamXanh_WebIntroduce)
+npm run typecheck && npm run lint && npm run build
 ```
 
 Kiểm thử đầu cuối tự dựng MongoDB trong bộ nhớ (`test/global-setup.ts`), **không cần** `.env`
@@ -297,6 +311,8 @@ Trong `ChamXanh_Mobile/`:
 | Địa chỉ giao hàng | `app/dia-chi.tsx` |
 | Thanh toán | `app/thanh-toan.tsx` |
 | Đơn hàng của tôi | `app/don-hang-cua-toi/` |
+| Màn báo lỗi kèm nút Thử lại (dùng chung) | `components/man-loi.tsx` |
+| Thiết lập kiểm thử (giả lập SecureStore, thông báo đẩy) | `test/thiet-lap.ts` |
 
 Trong `ChamXanh_WebIntroduce/` (một app Next.js duy nhất, không tách BE/FE):
 
@@ -587,6 +603,16 @@ Thiếu bất kỳ mục nào là bị từ chối, dù phần còn lại hoàn 
 - **Bán hàng thật cần vốn nhập hàng, kho, đóng gói, vận chuyển** — nhà trường tài trợ hạ tầng, không tài trợ tồn kho. Nên mở bán bằng nhóm hàng không hỏng: đất, phân, chậu, hạt giống, dụng cụ. Cây sống để sau.
 - **Xét duyệt tài khoản Apple mất 1–2 tuần** — GĐ 9 phụ thuộc hoàn toàn vào việc này.
 - **Cộng đồng chưa có thiết kế nào trong Figma** — phải thiết kế 6 màn mới, đưa vào Figma duyệt trước khi code.
+- **Nhánh vòng xoay tải phải đặt SAU nhánh báo lỗi ở mọi màn mobile.** Mẫu
+  `if (!duLieu) return <ActivityIndicator/>` đặt trước phần render lỗi khiến API hỏng là màn
+  kẹt vòng xoay VĨNH VIỄN: dữ liệu mãi null, thông báo lỗi tuy đã `setLoi` nhưng nằm trong
+  phần render không bao giờ chạy tới, và người dùng cũng không có nút nào để thử lại. Từng
+  dính ở 6 màn cùng lúc. Dùng `components/man-loi.tsx` (có nút Thử lại), đặt
+  `if (loi && !duLieu) return <ManLoi .../>` TRƯỚC nhánh vòng xoay.
+- **Endpoint "lấy thông tin tôi" phải đọc từ CSDL, không trả payload JWT.** `/auth-app/toi`
+  từng `return nguoiDung` (payload JWT, chỉ có id + email) nên thiếu `hoTen`. App khôi phục
+  phiên bằng đúng endpoint đó lúc mở lại, nên tên người dùng biến mất dù đăng nhập xong vẫn
+  thấy. Test cũ chỉ so `email` nên lọt lưới — giờ đã so cả bộ khoá với `/dang-nhap`.
 - **`@IsEnum()` KHÔNG dùng được với mảng `as const`** — phải dùng `@IsIn()`. Mọi hằng miền
   nghiệp vụ trong `cay-trong.const.ts` (`NOI_DAT`, `MIEN`, `CONG_DUNG`, `NHOM_CAY`…) là mảng
   `as const`, không phải TS enum. `@IsEnum` vẫn **chặn đúng** giá trị sai nên test "từ chối giá
