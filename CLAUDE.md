@@ -11,18 +11,28 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 ## Trạng thái hiện tại
 
 **GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.
-GĐ 5 xong toàn bộ phần "Có làm" không bị chặn** — nền tảng, xác thực, khảo sát nhập môn,
-Vườn của tôi, Giỏ Chờ Chăm Sóc, hướng dẫn thao tác từng bước, trồng xen canh, nhắc nhở qua
-Expo Push. Còn thiếu: EAS dev build để chạy thử trên máy thật (cần tài khoản Expo).
+GĐ 5 xong toàn bộ phần "Có làm" không bị chặn. GĐ 7 (Chợ Vật Tư) xong phần COD/chuyển khoản** —
+nền tảng, xác thực, khảo sát nhập môn, Vườn của tôi, Giỏ Chờ Chăm Sóc, hướng dẫn thao tác từng
+bước, trồng xen canh, nhắc nhở qua Expo Push, và giờ có thêm danh mục sản phẩm, giỏ hàng, địa
+chỉ giao hàng, đặt đơn thật từ app. Còn thiếu ở GĐ 5: EAS dev build để chạy thử trên máy thật
+(cần tài khoản Expo). Còn thiếu ở GĐ 7: MoMo (chờ tài khoản merchant thật — xem quyết định của
+người dùng bên dưới).
 
-**88 kiểm thử đơn vị + 155 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+**88 kiểm thử đơn vị + 169 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
 lint và build sạch cả BE lẫn FE, kể cả `next build` production và chạy thử `node dist/main.js`
-thật (không chỉ biên dịch). Mobile: typecheck/lint sạch, `expo-doctor` 21/21, bundle Metro
-thành công.
+thật (không chỉ biên dịch) — bao gồm một lượt smoke test thật qua HTTP cho luồng Chợ Vật Tư
+(đăng ký → xem danh mục công khai → thêm giỏ → thêm địa chỉ → đặt đơn COD → tính tiền/trừ tồn
+kho đúng → giỏ tự rỗng → xem lại đơn). Mobile: typecheck/lint sạch, `expo-doctor` 21/21, bundle
+Metro thành công (kể cả `expo export` thật cho Android, không chỉ biên dịch).
 
 **CI GitHub Actions xanh THẬT trên cả hai repo** (đã tự tay xác nhận qua GitHub API, không chỉ
-tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `5c8cb10`, ChamXanh_Mobile
-commit `950592e`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
+tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `d1688ff`, ChamXanh_Mobile
+commit `433bbc9`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
+
+**Quyết định GĐ 7 — thanh toán:** người dùng chọn chỉ làm COD/chuyển khoản trước, MoMo để sau
+khi có tài khoản merchant thật — không dựng khung giả lập trước vì tốn thời gian cho thứ chưa
+dùng được ngay. DTO `TaoDonHangDto` chặn `momo` bằng validator, dù enum `PhuongThucThanhToan`
+vẫn giữ giá trị đó để không phải đổi schema khi thêm sau.
 
 > **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
 > saving a routine that uses a GitHub repository`. Tài khoản Claude của người dùng chưa liên kết
@@ -125,18 +135,51 @@ commit `950592e`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn �
     thật + EAS dev build, giống việc GĐ 6 cần API key Claude thật. Đã xác nhận cơ chế (lưu token,
     truy vấn việc đến hạn, gộp theo người dùng, dừng đúng chỗ khi token sai định dạng) bằng test
     thật, chỉ riêng bước gọi ra máy chủ Expo là chưa xác nhận được.
-  - Tab Trợ lý/Chợ/Cộng đồng còn là màn giữ chỗ.
+  - Tab Trợ lý/Cộng đồng còn là màn giữ chỗ. Tab Chợ giờ là Chợ Vật Tư thật (xem GĐ 7).
+- **GĐ 7 — Chợ Vật Tư, phần COD/chuyển khoản** (Chợ tab không còn là màn giữ chỗ):
+  - **Vá lỗ hổng nghiêm trọng cùng lớp với GĐ 5**: `GET san-pham` chưa từng đánh dấu
+    `@Public()` — chỉ Admin/Content gọi được, nghĩa là tab Chợ không tải được sản phẩm nào nếu
+    không vá. Không sửa route Admin (`/san-pham`, vẫn thấy cả hàng đã ẩn) — thêm controller
+    riêng `san-pham-dang-ban` công khai, chỉ trả `dangBan:true`, không lộ trường quản trị hay
+    hàng đã ẩn khỏi kệ.
+  - **BE — `gio-hang`** (collection `carts`): giỏ hàng thật, KHÁC hoàn toàn Giỏ Chờ Chăm Sóc
+    (`care_basket`, chỉ là danh sách ghi nhớ). Mỗi người dùng một giỏ, cộng dồn số lượng khi
+    thêm lại cùng sản phẩm.
+  - **BE — `dia-chi`** (collection `addresses`): địa chỉ giao hàng đã lưu, hỗ trợ đặt mặc định
+    (tự bỏ mặc định của các địa chỉ khác khi đặt một địa chỉ mới làm mặc định).
+  - **BE — mở rộng `don-hang`**: thêm `nguoiDungId` (trước đây đơn không gắn với người dùng nào
+    — chỉ có `emailKhachHang` dạng chuỗi tự do vì chưa có luồng đặt đơn thật) và snapshot địa
+    chỉ có cấu trúc (`DiaChiGiaoHang`, chụp lại tại thời điểm đặt — sửa/xoá địa chỉ đã lưu sau
+    đó không ảnh hưởng đơn cũ). Endpoint app mới `POST/GET don-hang-cua-toi`: tự tính lại
+    `tongTien` từ giá trong CSDL (không tin số tiền phía client gửi lên), trừ tồn kho **nguyên
+    tử từng dòng** qua `SanPhamService.giamTonKho()` (điều kiện `tonKho >= soLuong` ngay trong
+    câu lệnh update — tránh bán âm khi nhiều đơn đặt cùng lúc), và **hoàn lại tồn kho** các
+    dòng đã trừ nếu một dòng sau đó thất bại giữa chừng (ví dụ hết hàng đúng lúc). MoMo bị chặn
+    ở DTO (`TaoDonHangDto` chỉ nhận `cod`/`chuyen-khoan`) theo quyết định của người dùng — xem
+    "Trạng thái hiện tại".
+  - **Mobile**: `app/(tabs)/cho.tsx` (danh mục lọc theo nhóm), `app/gio-hang.tsx`,
+    `app/dia-chi.tsx`, `app/thanh-toan.tsx` (chọn địa chỉ + phương thức, đặt đơn), thư mục
+    `app/don-hang-cua-toi/` (danh sách + chi tiết, có `_layout.tsx` riêng theo mẫu `ca-nhan/`).
+    Thêm liên kết từ Cá nhân tới "Đơn hàng của tôi" và "Địa chỉ giao hàng".
+  - Xác nhận bằng smoke test thật qua HTTP thay vì chỉ tin bộ e2e (thấy ở "Trạng thái hiện
+    tại") — vì luồng đặt đơn chạm tới nhiều service phối hợp (giỏ hàng, địa chỉ, sản phẩm,
+    người dùng) nên đáng để kiểm tra thêm một lớp thực tế ngoài Nest testing module.
+  - **Chưa làm ở GĐ 7**: MoMo (chờ tài khoản merchant thật), Admin chưa có màn riêng quản lý
+    đơn từ nguồn app khác với đơn thủ công cũ (dùng chung `/don-hang` hiện có, đã tự hoạt động
+    đúng vì chỉ thêm trường chứ không đổi luồng Admin).
 
 ## Việc kế tiếp
 
-**GĐ 5 đã xong toàn bộ phần "Có làm" không bị chặn.** Còn lại của GĐ 5: EAS dev build để chạy
-thử trên máy thật (cần tài khoản Expo — free tier vẫn tạo build được, không bắt buộc tài khoản
+**GĐ 5 và GĐ 7 (phần COD/chuyển khoản) đã xong.** Còn lại của GĐ 5: EAS dev build để chạy thử
+trên máy thật (cần tài khoản Expo — free tier vẫn tạo build được, không bắt buộc tài khoản
 Apple/Google trả phí ở bước này), và trang Web Admin cho `huong-dan-cham-soc` (hiện chỉ sửa
-được qua Swagger, chưa có UI). Sau đó chuyển sang Trợ lý (GĐ 6, cần API key Claude thật từ
-người dùng) hoặc Chợ Vật Tư (GĐ 7, làm được trọn vẹn không bị chặn). Song song có thể làm
-**GĐ 4 — web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có). Sau khi cộng
-đồng (GĐ 8, cần thiết kế Figma trước) triển khai, quay lại đối chiếu schema
-`nguoi-dung`/`kiem-duyet`/`don-hang` ở Web Admin với dữ liệu thật thay vì suy đoán như hiện tại.
+được qua Swagger, chưa có UI). Còn lại của GĐ 7: MoMo (chờ tài khoản merchant thật), và trang
+Web Admin riêng để phân biệt đơn từ app với đơn thủ công (hiện dùng chung `/don-hang`, vẫn hoạt
+động đúng nhưng chưa lọc theo nguồn). Tiếp theo: Trợ lý (GĐ 6, cần API key Claude thật từ người
+dùng) hoặc **GĐ 4 — web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có, chưa
+bị chặn). Sau khi cộng đồng (GĐ 8, cần thiết kế Figma trước) triển khai, quay lại đối chiếu
+schema `nguoi-dung`/`kiem-duyet` ở Web Admin với dữ liệu thật thay vì suy đoán như hiện tại
+(`don-hang` đã đối chiếu xong ở GĐ 7 — không còn là suy đoán).
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
@@ -213,6 +256,11 @@ Trong `ChamXanh_Mobile/`:
 | Giỏ Chờ Chăm Sóc | `app/gio-cho-cham-soc.tsx` |
 | Xin quyền + đăng ký Expo Push token | `lib/push-notifications.ts` |
 | Gom nhắc nhở chăm sóc theo người dùng (hàm thuần, ở BE) | `BE/src/modules/thong-bao/gom-nhac-nho.ts` |
+| Chợ Vật Tư — danh mục sản phẩm | `app/(tabs)/cho.tsx` |
+| Giỏ hàng | `app/gio-hang.tsx` |
+| Địa chỉ giao hàng | `app/dia-chi.tsx` |
+| Thanh toán | `app/thanh-toan.tsx` |
+| Đơn hàng của tôi | `app/don-hang-cua-toi/` |
 
 **Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
 được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
@@ -279,6 +327,7 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 | Khám phá | `GET/POST kham-pha` · `GET/PATCH/DELETE kham-pha/:id` |
 | Trang giới thiệu | `GET/POST trang-gioi-thieu` · `GET/PATCH/DELETE trang-gioi-thieu/:duongDan` |
 | Sản phẩm | `GET/POST san-pham` · `GET/PATCH/DELETE san-pham/:id` |
+| Sản phẩm (app, công khai) | `GET san-pham-dang-ban` · `/:id` |
 | Người dùng app | `GET nguoi-dung` · `GET nguoi-dung/:id` · `PATCH /:id/khoa` · `/:id/kich-hoat` |
 | Kiểm duyệt | `GET kiem-duyet` · `PATCH kiem-duyet/:id` |
 | Đơn hàng | `GET don-hang` · `GET don-hang/:id` · `PATCH don-hang/:id/trang-thai` |
@@ -286,6 +335,9 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 | Hướng dẫn chăm sóc | `GET huong-dan-cham-soc` (công khai) · `/:loai` (công khai) · `PATCH /:loai` · `POST /nap-mac-dinh` |
 | Giỏ Chờ Chăm Sóc (app) | `GET gio-cho-cham-soc` · `/goi-y` · `POST gio-cho-cham-soc` · `PATCH /:id/danh-dau-da-mua` · `DELETE /:id` |
 | Đăng ký push token (app) | `POST auth-app/dang-ky-push-token` |
+| Địa chỉ giao hàng (app) | `GET/POST dia-chi` · `PATCH/DELETE dia-chi/:id` |
+| Giỏ hàng Chợ Vật Tư (app) | `GET/POST gio-hang` · `PATCH/DELETE gio-hang/:sanPhamId` |
+| Đơn hàng (app) | `GET/POST don-hang-cua-toi` · `GET don-hang-cua-toi/:id` |
 | Sức khoẻ | `GET health` (công khai) |
 
 ---
