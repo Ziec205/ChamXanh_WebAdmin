@@ -104,6 +104,19 @@ describe('Xác thực người dùng app — /auth-app (đầu cuối)', () => {
     expect(res.body.duLieu.email).toBe(EMAIL);
   });
 
+  // Từng lọt lưới: /toi trả thẳng payload JWT (chỉ id + email) nên thiếu hoTen.
+  // App khôi phục phiên bằng chính endpoint này lúc mở lại, nên tên người dùng
+  // biến mất khỏi màn Cá nhân dù vừa đăng nhập xong vẫn còn thấy.
+  it('GET /toi trả ĐỦ trường như lúc đăng nhập, gồm cả hoTen', async () => {
+    const dn = await http.post('/api/v1/auth-app/dang-nhap').send({ email: EMAIL, matKhau: MAT_KHAU }).expect(200);
+    const res = await http
+      .get('/api/v1/auth-app/toi')
+      .set('Authorization', `Bearer ${dn.body.duLieu.accessToken}`)
+      .expect(200);
+    expect(res.body.duLieu.hoTen).toBe('Khách Test');
+    expect(Object.keys(res.body.duLieu).sort()).toEqual(Object.keys(dn.body.duLieu.nguoiDung).sort());
+  });
+
   it('token admin không dùng được cho route app', async () => {
     // Không có tài khoản admin thật ở đây — thử token rỗng/giả phải bị 401.
     await http.get('/api/v1/auth-app/toi').set('Authorization', 'Bearer token-gia-mao').expect(401);

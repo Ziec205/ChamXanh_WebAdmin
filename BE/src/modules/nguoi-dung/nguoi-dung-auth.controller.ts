@@ -11,7 +11,7 @@ import { XoaTaiKhoanDto } from './dto/xoa-tai-khoan.dto';
 import { DangKyPushTokenDto } from './dto/dang-ky-push-token.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { JwtAppAuthGuard } from './guards/jwt-app-auth.guard';
-import { CurrentAppUser, type AuthenticatedAppUser } from './guards/current-app-user.decorator';
+import { CurrentAppUser } from './guards/current-app-user.decorator';
 
 /**
  * Xác thực cho người dùng ỨNG DỤNG di động — tách hoàn toàn khỏi `/auth`
@@ -105,7 +105,11 @@ export class NguoiDungAuthController {
   @UseGuards(JwtAppAuthGuard)
   @Get('toi')
   @ApiOperation({ summary: 'Thông tin tài khoản app đang đăng nhập' })
-  toi(@CurrentAppUser() nguoiDung: AuthenticatedAppUser) {
-    return nguoiDung;
+  async toi(@CurrentAppUser('id') id: string) {
+    // Phải đọc từ CSDL, KHÔNG trả thẳng payload JWT: payload chỉ có id + email,
+    // thiếu hoTen. App khôi phục phiên bằng đúng endpoint này lúc mở lại, nên
+    // trả thiếu sẽ làm tên người dùng biến mất dù đăng nhập xong vẫn thấy.
+    const nd = await this.nguoiDungService.chiTiet(id);
+    return { id: String(nd._id), email: nd.email, hoTen: nd.hoTen };
   }
 }
