@@ -4,7 +4,7 @@ import {
   ArrayUnique,
   IsArray,
   IsBoolean,
-  IsEnum,
+  IsIn,
   IsInt,
   IsOptional,
   IsString,
@@ -63,15 +63,15 @@ export class CreatePlantDto {
   tenKhoaHoc?: string;
 
   @ApiProperty({ enum: NHOM_CAY })
-  @IsEnum(NHOM_CAY)
+  @IsIn(NHOM_CAY)
   nhom!: NhomCay;
 
   @ApiProperty({ enum: MUC_SANG })
-  @IsEnum(MUC_SANG)
+  @IsIn(MUC_SANG)
   anhSangToiThieu!: MucSang;
 
   @ApiProperty({ enum: MUC_SANG })
-  @IsEnum(MUC_SANG)
+  @IsIn(MUC_SANG)
   anhSangLyTuong!: MucSang;
 
   @ApiProperty({ minimum: 1, maximum: 60 })
@@ -131,7 +131,7 @@ export class CreatePlantDto {
   nhietDoDemMax?: number;
 
   @ApiProperty({ enum: MUC_AM })
-  @IsEnum(MUC_AM)
+  @IsIn(MUC_AM)
   doAm!: MucAm;
 
   @ApiProperty({ description: 'An toàn với chó mèo hay không — bộ lọc cứng của thuật toán gợi ý' })
@@ -164,7 +164,7 @@ export class CreatePlantDto {
 
   @ApiPropertyOptional({ enum: MENH, nullable: true })
   @IsOptional()
-  @IsEnum(MENH)
+  @IsIn(MENH)
   menhPhongThuy?: Menh | null;
 
   @ApiPropertyOptional()
@@ -196,7 +196,7 @@ export class CreatePlantDto {
   @ApiPropertyOptional({ enum: CONG_DUNG, isArray: true })
   @IsOptional()
   @IsArray()
-  @IsEnum(CONG_DUNG, { each: true })
+  @IsIn(CONG_DUNG, { each: true })
   @ArrayUnique()
   congDung?: CongDung[];
 

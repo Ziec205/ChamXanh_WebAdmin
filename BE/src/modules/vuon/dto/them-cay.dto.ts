@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsIn, IsOptional, IsString, MinLength } from 'class-validator';
 import { MIEN, NOI_DAT, type Mien, type NoiDat } from 'src/common/constants/cay-trong.const';
 
 export class ThemCayVaoVuonDto {
@@ -14,10 +14,10 @@ export class ThemCayVaoVuonDto {
   tenGoi?: string;
 
   @ApiProperty({ enum: MIEN })
-  @IsEnum(MIEN, { message: `Miền phải là một trong: ${MIEN.join(', ')}` })
+  @IsIn(MIEN, { message: `Miền phải là một trong: ${MIEN.join(', ')}` })
   mien!: Mien;
 
   @ApiProperty({ enum: NOI_DAT })
-  @IsEnum(NOI_DAT, { message: `Nơi đặt phải là một trong: ${NOI_DAT.join(', ')}` })
+  @IsIn(NOI_DAT, { message: `Nơi đặt phải là một trong: ${NOI_DAT.join(', ')}` })
   noiDat!: NoiDat;
 }

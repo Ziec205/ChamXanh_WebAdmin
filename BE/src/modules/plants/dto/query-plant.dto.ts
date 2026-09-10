@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsEnum, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsBoolean, IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 import { NHOM_CAY, type NhomCay } from 'src/common/constants/cay-trong.const';
 
 export class QueryPlantDto {
@@ -11,7 +11,7 @@ export class QueryPlantDto {
 
   @ApiPropertyOptional({ enum: NHOM_CAY })
   @IsOptional()
-  @IsEnum(NHOM_CAY)
+  @IsIn(NHOM_CAY)
   nhom?: NhomCay;
 
   @ApiPropertyOptional({ description: 'Lọc theo trạng thái kiểm chứng' })

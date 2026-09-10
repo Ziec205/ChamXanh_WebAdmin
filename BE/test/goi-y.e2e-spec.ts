@@ -302,6 +302,16 @@ describe('Cây trồng, khảo sát và gợi ý (đầu cuối)', () => {
       expect(JSON.stringify(res.body.thongBao)).toContain('noiDat');
     });
 
+    // Từng lọt lưới: dùng @IsEnum() với mảng `as const` vẫn chặn đúng giá trị sai
+    // nhưng in thông báo rỗng ("must be one of the following values: "), nên app
+    // và Swagger không bao giờ biết giá trị nào hợp lệ. Phải là @IsIn().
+    it('thông báo lỗi LIỆT KÊ ra các giá trị hợp lệ, không bỏ trống', async () => {
+      const res = await xinGoiY({ noiDat: 'trên mặt trăng' }).expect(400);
+      const thongBao = (res.body.thongBao as string[]).find((t) => t.includes('noiDat'))!;
+      expect(thongBao).toContain('ban công có mái');
+      expect(thongBao).not.toMatch(/values:\s*$/);
+    });
+
     it('từ chối trường lạ thay vì âm thầm bỏ qua', async () => {
       await xinGoiY({ truongKhongTonTai: 'abc' }).expect(400);
     });
