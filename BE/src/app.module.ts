@@ -21,6 +21,8 @@ import { KiemDuyetModule } from './modules/kiem-duyet/kiem-duyet.module';
 import { SanPhamModule } from './modules/san-pham/san-pham.module';
 import { DonHangModule } from './modules/don-hang/don-hang.module';
 import { VuonModule } from './modules/vuon/vuon.module';
+import { HuongDanChamSocModule } from './modules/huong-dan-cham-soc/huong-dan-cham-soc.module';
+import { GioChoChamSocModule } from './modules/gio-cho-cham-soc/gio-cho-cham-soc.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -66,6 +68,8 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     SanPhamModule,
     DonHangModule,
     VuonModule,
+    HuongDanChamSocModule,
+    GioChoChamSocModule,
   ],
   providers: [
     // Thứ tự quan trọng: chặn tần suất → xác thực → phân quyền.

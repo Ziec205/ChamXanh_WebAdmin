@@ -18,5 +18,6 @@ import { NguoiDungModule } from '../nguoi-dung/nguoi-dung.module';
   ],
   controllers: [VuonController],
   providers: [VuonService],
+  exports: [VuonService],
 })
 export class VuonModule {}

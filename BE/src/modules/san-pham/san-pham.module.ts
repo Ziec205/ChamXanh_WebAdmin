@@ -8,5 +8,6 @@ import { SanPham, SanPhamSchema } from './schemas/san-pham.schema';
   imports: [MongooseModule.forFeature([{ name: SanPham.name, schema: SanPhamSchema }])],
   controllers: [SanPhamController],
   providers: [SanPhamService],
+  exports: [SanPhamService],
 })
 export class SanPhamModule {}

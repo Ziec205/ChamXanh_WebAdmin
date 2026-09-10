@@ -18,6 +18,11 @@ export class SanPhamService {
     return this.model.find().sort({ createdAt: -1 }).exec();
   }
 
+  /** Sản phẩm đang bán thuộc một nhóm — dùng để gợi ý vật tư cho Giỏ Chờ Chăm Sóc. */
+  theoNhomDangBan(nhom: string) {
+    return this.model.find({ nhom, dangBan: true }).limit(5).exec();
+  }
+
   async chiTiet(id: string) {
     const muc = await this.model.findById(id).exec();
     if (!muc) throw new NotFoundException('Không tìm thấy liên kết tiếp thị.');
