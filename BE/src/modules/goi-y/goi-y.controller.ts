@@ -2,12 +2,14 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GoiYService } from './goi-y.service';
 import { XinGoiYDto } from './dto/xin-goi-y.dto';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Gợi ý cây trồng')
 @Controller('goi-y')
 export class GoiYController {
   constructor(private readonly service: GoiYService) {}
 
+  @Public()
   @Post()
   @ApiOperation({
     summary: 'Gợi ý cây phù hợp từ câu trả lời khảo sát',

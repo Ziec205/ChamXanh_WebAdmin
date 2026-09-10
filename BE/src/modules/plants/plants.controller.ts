@@ -7,14 +7,16 @@ import { UpdatePlantDto } from './dto/update-plant.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AdminRole } from '../admin-users/schemas/admin-user.schema';
 import { CurrentUser, type AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Cây trồng')
 @Controller('cay-trong')
 export class PlantsController {
   constructor(private readonly service: PlantsService) {}
 
+  @Public()
   @Get()
-  @ApiOperation({ summary: 'Danh sách cây trồng, có tìm kiếm và phân trang' })
+  @ApiOperation({ summary: 'Danh sách cây trồng, có tìm kiếm và phân trang — app đọc để thêm cây vào vườn' })
   danhSach(@Query() q: QueryPlantDto) {
     return this.service.danhSach(q);
   }
@@ -26,6 +28,7 @@ export class PlantsController {
     return ketQua ?? { tong: 0, daKiemChung: 0, dangHienThi: 0, anToanThuNuoi: 0 };
   }
 
+  @Public()
   @Get(':ma')
   @ApiOperation({ summary: 'Chi tiết một loài cây' })
   chiTiet(@Param('ma') ma: string) {

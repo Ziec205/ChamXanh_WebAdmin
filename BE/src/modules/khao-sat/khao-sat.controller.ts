@@ -5,14 +5,16 @@ import { CapNhatCauHoiDto } from './dto/cap-nhat-cau-hoi.dto';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AdminRole } from '../admin-users/schemas/admin-user.schema';
 import { CurrentUser, type AuthenticatedUser } from 'src/common/decorators/current-user.decorator';
+import { Public } from 'src/common/decorators/public.decorator';
 
 @ApiTags('Khảo sát nhập môn')
 @Controller('khao-sat')
 export class KhaoSatController {
   constructor(private readonly service: KhaoSatService) {}
 
+  @Public()
   @Get('cau-hoi')
-  @ApiOperation({ summary: 'Bộ câu hỏi đang hiển thị cho người dùng' })
+  @ApiOperation({ summary: 'Bộ câu hỏi đang hiển thị cho người dùng — app đọc khi làm khảo sát nhập môn' })
   danhSach() {
     return this.service.danhSach();
   }
