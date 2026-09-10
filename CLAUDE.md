@@ -10,24 +10,25 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 
 ## Trạng thái hiện tại
 
-**GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.
+**GĐ 0, GĐ 2, GĐ 3, GĐ 4 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.
 GĐ 5 xong toàn bộ phần "Có làm" không bị chặn. GĐ 7 (Chợ Vật Tư) xong phần COD/chuyển khoản** —
 nền tảng, xác thực, khảo sát nhập môn, Vườn của tôi, Giỏ Chờ Chăm Sóc, hướng dẫn thao tác từng
-bước, trồng xen canh, nhắc nhở qua Expo Push, và giờ có thêm danh mục sản phẩm, giỏ hàng, địa
-chỉ giao hàng, đặt đơn thật từ app. Còn thiếu ở GĐ 5: EAS dev build để chạy thử trên máy thật
-(cần tài khoản Expo). Còn thiếu ở GĐ 7: MoMo (chờ tài khoản merchant thật — xem quyết định của
-người dùng bên dưới).
+bước, trồng xen canh, nhắc nhở qua Expo Push, danh mục sản phẩm, giỏ hàng, địa chỉ giao hàng,
+đặt đơn thật từ app, và giờ web giới thiệu công khai đã sống (ChamXanh_WebIntroduce chuyển từ
+GĐ 0 sang có mã nguồn thật). Còn thiếu ở GĐ 5: EAS dev build để chạy thử trên máy thật (cần tài
+khoản Expo). Còn thiếu ở GĐ 7: MoMo (chờ tài khoản merchant thật — xem quyết định của người
+dùng bên dưới).
 
-**88 kiểm thử đơn vị + 169 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+**88 kiểm thử đơn vị + 173 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
 lint và build sạch cả BE lẫn FE, kể cả `next build` production và chạy thử `node dist/main.js`
 thật (không chỉ biên dịch) — bao gồm một lượt smoke test thật qua HTTP cho luồng Chợ Vật Tư
 (đăng ký → xem danh mục công khai → thêm giỏ → thêm địa chỉ → đặt đơn COD → tính tiền/trừ tồn
 kho đúng → giỏ tự rỗng → xem lại đơn). Mobile: typecheck/lint sạch, `expo-doctor` 21/21, bundle
 Metro thành công (kể cả `expo export` thật cho Android, không chỉ biên dịch).
 
-**CI GitHub Actions xanh THẬT trên cả hai repo** (đã tự tay xác nhận qua GitHub API, không chỉ
-tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `d1688ff`, ChamXanh_Mobile
-commit `433bbc9`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
+**CI GitHub Actions xanh THẬT trên cả ba repo** (đã tự tay xác nhận qua GitHub API, không chỉ
+tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `fc41511`, ChamXanh_Mobile
+commit `433bbc9`, ChamXanh_WebIntroduce commit `77e4306`, cả ba 10/09/2026.
 
 **Quyết định GĐ 7 — thanh toán:** người dùng chọn chỉ làm COD/chuyển khoản trước, MoMo để sau
 khi có tài khoản merchant thật — không dựng khung giả lập trước vì tốn thời gian cho thứ chưa
@@ -167,19 +168,44 @@ vẫn giữ giá trị đó để không phải đổi schema khi thêm sau.
   - **Chưa làm ở GĐ 7**: MoMo (chờ tài khoản merchant thật), Admin chưa có màn riêng quản lý
     đơn từ nguồn app khác với đơn thủ công cũ (dùng chung `/don-hang` hiện có, đã tự hoạt động
     đúng vì chỉ thêm trường chứ không đổi luồng Admin).
+- **GĐ 4 — web giới thiệu công khai** (`ChamXanh_WebIntroduce`, chuyển từ GĐ 0 sang có mã nguồn):
+  - **Bỏ quy ước thư mục BE/FE** mà README/đặc tả cũ đặt ra cho repo này — người dùng xác nhận
+    dựng **một app Next.js duy nhất**. Trang chỉ đọc nội dung do Web Admin ghi, không có logic
+    nghiệp vụ riêng, nên tách BE/FE chỉ thêm một tầng mạng không cần thiết. Route Handler
+    (`app/api/lam-moi`) chỉ tồn tại cho webhook revalidate, không phải một tầng API độc lập.
+  - **Vá lỗ hổng nghiêm trọng cùng lớp lần thứ ba** (sau `khao-sat/goi-y/cay-trong` ở GĐ 5 và
+    `san-pham` ở GĐ 7): `GET trang-gioi-thieu` chưa từng đánh dấu `@Public()` — nếu không vá
+    thì web giới thiệu không tải được bài viết nào. Vá bằng `trang-gioi-thieu-cong-khai`, công
+    khai riêng, chỉ trả `daXuatBan:true`, route Admin giữ nguyên private (thấy cả bài nháp).
+    **Mẫu lặp lại đủ ba lần đáng ghi nhớ**: mọi module mới cho tính năng đọc-công-khai (app
+    hoặc web) phải tự hỏi "cái này cần gọi được mà không đăng nhập không?" NGAY khi thiết kế
+    route, không đợi đến lúc tích hợp phía đọc mới phát hiện ra.
+  - Trang chủ + `/[duongDan]`: render động từ API công khai, `generateStaticParams` tự động
+    theo danh sách bài đã xuất bản. `/chinh-sach-bao-mat` và `/dieu-khoan-su-dung`: nội dung
+    tĩnh thật trong mã nguồn (không phụ thuộc CMS) — vì đây là điều kiện bắt buộc để duyệt
+    store, không thể để phụ thuộc vào việc Admin nhớ tạo đúng hai bài đó.
+  - **`lib/api.ts` nuốt mọi lỗi mạng/API** thay vì ném ra ngoài — `next build` phải chạy được
+    trong CI dù không có BE thật đang chạy (khác `ChamXanh_WebAdmin/FE`, nơi hầu hết trang đọc
+    cookie nên Next tự chuyển sang render động, không cố fetch lúc build).
+  - Xác nhận bằng smoke test thật: dựng BE thật + tạo bài viết qua API admin, chạy dev server
+    WebIntroduce trỏ vào đó, xác nhận trang chủ/bài viết/hai trang pháp lý/404/webhook
+    revalidate (kèm kiểm tra từ chối sai mật khẩu) đều đúng qua HTTP thật — không chỉ tin
+    `next build` thành công.
 
 ## Việc kế tiếp
 
-**GĐ 5 và GĐ 7 (phần COD/chuyển khoản) đã xong.** Còn lại của GĐ 5: EAS dev build để chạy thử
-trên máy thật (cần tài khoản Expo — free tier vẫn tạo build được, không bắt buộc tài khoản
-Apple/Google trả phí ở bước này), và trang Web Admin cho `huong-dan-cham-soc` (hiện chỉ sửa
-được qua Swagger, chưa có UI). Còn lại của GĐ 7: MoMo (chờ tài khoản merchant thật), và trang
-Web Admin riêng để phân biệt đơn từ app với đơn thủ công (hiện dùng chung `/don-hang`, vẫn hoạt
-động đúng nhưng chưa lọc theo nguồn). Tiếp theo: Trợ lý (GĐ 6, cần API key Claude thật từ người
-dùng) hoặc **GĐ 4 — web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có, chưa
-bị chặn). Sau khi cộng đồng (GĐ 8, cần thiết kế Figma trước) triển khai, quay lại đối chiếu
-schema `nguoi-dung`/`kiem-duyet` ở Web Admin với dữ liệu thật thay vì suy đoán như hiện tại
-(`don-hang` đã đối chiếu xong ở GĐ 7 — không còn là suy đoán).
+**GĐ 4, GĐ 5 và GĐ 7 (phần COD/chuyển khoản) đã xong.** Còn lại của GĐ 5: EAS dev build để
+chạy thử trên máy thật (cần tài khoản Expo — free tier vẫn tạo build được, không bắt buộc tài
+khoản Apple/Google trả phí ở bước này), và trang Web Admin cho `huong-dan-cham-soc` (hiện chỉ
+sửa được qua Swagger, chưa có UI). Còn lại của GĐ 7: MoMo (chờ tài khoản merchant thật), và
+trang Web Admin riêng để phân biệt đơn từ app với đơn thủ công (hiện dùng chung `/don-hang`,
+vẫn hoạt động đúng nhưng chưa lọc theo nguồn). Còn lại của GĐ 4: Vercel thật để bật webhook
+`revalidatePath` (chạy được cục bộ, chưa triển khai thật), Admin gọi webhook đó sau khi lưu bài
+viết (`FE` Web Admin hiện chưa tự gọi `POST /api/lam-moi` của WebIntroduce sau khi lưu — nội
+dung vẫn cập nhật đúng nhờ cache theo tag, chỉ chưa "tức thì" như đặc tả). Tiếp theo: Trợ lý
+(GĐ 6, cần API key Claude thật từ người dùng). Sau khi cộng đồng (GĐ 8, cần thiết kế Figma
+trước) triển khai, quay lại đối chiếu schema `nguoi-dung`/`kiem-duyet` ở Web Admin với dữ liệu
+thật thay vì suy đoán như hiện tại (`don-hang` đã đối chiếu xong ở GĐ 7 — không còn là suy đoán).
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
@@ -262,6 +288,16 @@ Trong `ChamXanh_Mobile/`:
 | Thanh toán | `app/thanh-toan.tsx` |
 | Đơn hàng của tôi | `app/don-hang-cua-toi/` |
 
+Trong `ChamXanh_WebIntroduce/` (một app Next.js duy nhất, không tách BE/FE):
+
+| Việc cần làm | Tệp |
+|---|---|
+| Đọc nội dung công khai từ Web Admin | `src/lib/api.ts` |
+| Trang chủ | `src/app/page.tsx` |
+| Bài viết động theo `duongDan` | `src/app/[duongDan]/page.tsx` |
+| Chính sách bảo mật / Điều khoản (tĩnh, không qua CMS) | `src/app/chinh-sach-bao-mat/`, `src/app/dieu-khoan-su-dung/` |
+| Webhook revalidate | `src/app/api/lam-moi/route.ts` |
+
 **Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
 được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
 vào service.
@@ -328,6 +364,7 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 | Trang giới thiệu | `GET/POST trang-gioi-thieu` · `GET/PATCH/DELETE trang-gioi-thieu/:duongDan` |
 | Sản phẩm | `GET/POST san-pham` · `GET/PATCH/DELETE san-pham/:id` |
 | Sản phẩm (app, công khai) | `GET san-pham-dang-ban` · `/:id` |
+| Trang giới thiệu (web công khai) | `GET trang-gioi-thieu-cong-khai` · `/:duongDan` |
 | Người dùng app | `GET nguoi-dung` · `GET nguoi-dung/:id` · `PATCH /:id/khoa` · `/:id/kich-hoat` |
 | Kiểm duyệt | `GET kiem-duyet` · `PATCH kiem-duyet/:id` |
 | Đơn hàng | `GET don-hang` · `GET don-hang/:id` · `PATCH don-hang/:id/trang-thai` |
@@ -348,8 +385,7 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 ChamXanh_Mobile          React Native + Expo    → Google Play / App Store
 ChamXanh_WebAdmin/BE     NestJS + TypeScript    → Render (gói trả phí)   ← API DUY NHẤT
 ChamXanh_WebAdmin/FE     Next.js + TypeScript   → Vercel
-ChamXanh_WebIntroduce/BE Route Handler Next.js  → Vercel (KHÔNG phải NestJS riêng)
-ChamXanh_WebIntroduce/FE Next.js                → Vercel
+ChamXanh_WebIntroduce     Next.js (một app duy nhất) → Vercel (KHÔNG tách BE/FE, KHÔNG NestJS riêng)
                          MongoDB Atlas          ← dùng chung, gồm cả ảnh qua GridFS
 ```
 
