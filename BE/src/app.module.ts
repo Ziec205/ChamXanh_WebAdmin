@@ -20,6 +20,7 @@ import { NguoiDungModule } from './modules/nguoi-dung/nguoi-dung.module';
 import { KiemDuyetModule } from './modules/kiem-duyet/kiem-duyet.module';
 import { SanPhamModule } from './modules/san-pham/san-pham.module';
 import { DonHangModule } from './modules/don-hang/don-hang.module';
+import { VuonModule } from './modules/vuon/vuon.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -64,6 +65,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     KiemDuyetModule,
     SanPhamModule,
     DonHangModule,
+    VuonModule,
   ],
   providers: [
     // Thứ tự quan trọng: chặn tần suất → xác thực → phân quyền.
