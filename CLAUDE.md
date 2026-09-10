@@ -11,15 +11,18 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 ## Trạng thái hiện tại
 
 **GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.
-GĐ 5 đang chạy — nền tảng, xác thực, Vườn của tôi và khảo sát nhập môn trong app đã xong.**
+GĐ 5 xong toàn bộ phần "Có làm" không bị chặn** — nền tảng, xác thực, khảo sát nhập môn,
+Vườn của tôi, Giỏ Chờ Chăm Sóc, hướng dẫn thao tác từng bước, trồng xen canh, nhắc nhở qua
+Expo Push. Còn thiếu: EAS dev build để chạy thử trên máy thật (cần tài khoản Expo).
 
-**81 kiểm thử đơn vị + 139 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
-lint và build sạch cả BE lẫn FE, kể cả `next build` production. Mobile: typecheck/lint sạch,
-bundle Metro thành công.
+**88 kiểm thử đơn vị + 155 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+lint và build sạch cả BE lẫn FE, kể cả `next build` production và chạy thử `node dist/main.js`
+thật (không chỉ biên dịch). Mobile: typecheck/lint sạch, `expo-doctor` 21/21, bundle Metro
+thành công.
 
 **CI GitHub Actions xanh THẬT trên cả hai repo** (đã tự tay xác nhận qua GitHub API, không chỉ
-tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `640f034`, ChamXanh_Mobile
-commit `de00a83`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
+tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `5c8cb10`, ChamXanh_Mobile
+commit `950592e`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
 
 > **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
 > saving a routine that uses a GitHub repository`. Tài khoản Claude của người dùng chưa liên kết
@@ -103,17 +106,37 @@ commit `de00a83`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn �
   - Xác nhận toàn bộ luồng bằng smoke test thật (dựng MongoDB + BE thật, không phải chỉ unit
     test): đăng ký → khảo sát công khai → gợi ý → thêm vào vườn → đúng 4 loại việc sinh ra →
     hoàn thành việc dời hạn đúng.
+  - **Chi tiết cây + trồng xen canh** (`app/vuon-chi-tiet/[id].tsx`): dùng field
+    `trongXenDuocVoi`/`khongTrongCungVoi` đã có sẵn từ GĐ 3, không cần sửa BE.
+  - **Hướng dẫn thao tác từng bước** — module `huong-dan-cham-soc`: nội dung tĩnh 4 bước/loại
+    việc, Admin sửa được (chưa có trang Web Admin, xem "Việc kế tiếp"). Public GET, app hiển thị
+    qua `app/huong-dan/[loai].tsx`, link từ mỗi việc trong tab Vườn.
+  - **Giỏ Chờ Chăm Sóc** — module `gio-cho-cham-soc`: "sản phẩm lưu sẵn cho nhu cầu sắp tới của
+    một cây" (định nghĩa từ đặc tả). Gợi ý vật tư (phân bón/đất) khi việc chăm sóc liên quan đến
+    hạn trong 7 ngày tới. KHÁC giỏ hàng Chợ Vật Tư thật (`carts`, GĐ 7 chưa dựng) — chỉ là danh
+    sách ghi nhớ, chưa phải luồng thanh toán. Màn `app/gio-cho-cham-soc.tsx`.
+  - **Nhắc nhở qua Expo Push** — module `thong-bao`: cron 0h UTC (7h sáng giờ VN) mỗi ngày, gom
+    việc đến hạn/quá hạn theo người dùng (hàm thuần `gom-nhac-nho.ts`, tách khỏi service để test
+    không cần Mongo/Expo), gửi qua `expo-server-sdk`. **Đã ghim `@nestjs/schedule@6.1.3` và
+    `expo-server-sdk@5.0.0`** — bản mới nhất của cả hai chỉ phát hành ESM thuần, vỡ cả Jest lẫn
+    `nest build`/runtime CommonJS của dự án. Mobile: `lib/push-notifications.ts` xin quyền, lấy
+    token, gửi lên BE — thất bại thì bỏ qua im lặng, không chặn luồng chính.
+  - **Việc gửi push thật và tự động điền token thật không kiểm thử được ở đây** — cần thiết bị
+    thật + EAS dev build, giống việc GĐ 6 cần API key Claude thật. Đã xác nhận cơ chế (lưu token,
+    truy vấn việc đến hạn, gộp theo người dùng, dừng đúng chỗ khi token sai định dạng) bằng test
+    thật, chỉ riêng bước gọi ra máy chủ Expo là chưa xác nhận được.
   - Tab Trợ lý/Chợ/Cộng đồng còn là màn giữ chỗ.
 
 ## Việc kế tiếp
 
-GĐ 5 còn thiếu: Giỏ Chờ Chăm Sóc, hướng dẫn thao tác từng bước (`care_guides`), trồng xen canh,
-nhắc nhở qua push (Expo Push Notifications), và EAS dev build để test trên máy thật (Expo Go
-không đủ cho SecureStore ở một số bản, cần xác nhận). Sau đó mới sang Trợ lý (GĐ 6, cần API key
-Claude thật) hoặc Chợ Vật Tư (GĐ 7). Song song có thể làm **GĐ 4 — web giới thiệu công khai**
-(đọc dữ liệu từ `/trang-gioi-thieu` đã có). Sau khi mobile và cộng đồng (GĐ 8) triển khai, quay
-lại đối chiếu schema `nguoi-dung`/`kiem-duyet`/`don-hang` ở Web Admin với dữ liệu thật thay vì
-suy đoán như hiện tại.
+**GĐ 5 đã xong toàn bộ phần "Có làm" không bị chặn.** Còn lại của GĐ 5: EAS dev build để chạy
+thử trên máy thật (cần tài khoản Expo — free tier vẫn tạo build được, không bắt buộc tài khoản
+Apple/Google trả phí ở bước này), và trang Web Admin cho `huong-dan-cham-soc` (hiện chỉ sửa
+được qua Swagger, chưa có UI). Sau đó chuyển sang Trợ lý (GĐ 6, cần API key Claude thật từ
+người dùng) hoặc Chợ Vật Tư (GĐ 7, làm được trọn vẹn không bị chặn). Song song có thể làm
+**GĐ 4 — web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có). Sau khi cộng
+đồng (GĐ 8, cần thiết kế Figma trước) triển khai, quay lại đối chiếu schema
+`nguoi-dung`/`kiem-duyet`/`don-hang` ở Web Admin với dữ liệu thật thay vì suy đoán như hiện tại.
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
@@ -186,6 +209,10 @@ Trong `ChamXanh_Mobile/`:
 | Khung 5 tab | `app/(tabs)/_layout.tsx` |
 | Khảo sát nhập môn (đọc câu hỏi động, gửi /goi-y) | `app/khao-sat/index.tsx` |
 | Vườn của tôi (danh sách cây + việc chăm sóc) | `app/(tabs)/vuon.tsx` |
+| Chi tiết cây + trồng xen canh | `app/vuon-chi-tiet/[id].tsx` |
+| Giỏ Chờ Chăm Sóc | `app/gio-cho-cham-soc.tsx` |
+| Xin quyền + đăng ký Expo Push token | `lib/push-notifications.ts` |
+| Gom nhắc nhở chăm sóc theo người dùng (hàm thuần, ở BE) | `BE/src/modules/thong-bao/gom-nhac-nho.ts` |
 
 **Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
 được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
@@ -256,6 +283,9 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 | Kiểm duyệt | `GET kiem-duyet` · `PATCH kiem-duyet/:id` |
 | Đơn hàng | `GET don-hang` · `GET don-hang/:id` · `PATCH don-hang/:id/trang-thai` |
 | Vườn của tôi (app) | `GET/POST vuon/cay` · `GET/DELETE vuon/cay/:id` · `GET vuon/viec-cham-soc` · `PATCH vuon/viec-cham-soc/:id/hoan-thanh` |
+| Hướng dẫn chăm sóc | `GET huong-dan-cham-soc` (công khai) · `/:loai` (công khai) · `PATCH /:loai` · `POST /nap-mac-dinh` |
+| Giỏ Chờ Chăm Sóc (app) | `GET gio-cho-cham-soc` · `/goi-y` · `POST gio-cho-cham-soc` · `PATCH /:id/danh-dau-da-mua` · `DELETE /:id` |
+| Đăng ký push token (app) | `POST auth-app/dang-ky-push-token` |
 | Sức khoẻ | `GET health` (công khai) |
 
 ---
