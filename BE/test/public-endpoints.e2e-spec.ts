@@ -60,4 +60,12 @@ describe('Endpoint công khai cho app mobile — không cần token (đầu cu�
   it('GET /cay-trong/thong-ke (chỉ Admin) vẫn bị chặn khi không có token', async () => {
     await http.get('/api/v1/cay-trong/thong-ke').expect(401);
   });
+
+  it('GET /san-pham-dang-ban không cần token (Chợ Vật Tư)', async () => {
+    await http.get('/api/v1/san-pham-dang-ban').expect(200);
+  });
+
+  it('GET /san-pham (danh mục quản trị, chưa lọc dangBan) vẫn bị chặn khi không có token', async () => {
+    await http.get('/api/v1/san-pham').expect(401);
+  });
 });

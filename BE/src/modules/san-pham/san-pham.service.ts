@@ -23,6 +23,19 @@ export class SanPhamService {
     return this.model.find({ nhom, dangBan: true }).limit(5).exec();
   }
 
+  /** Danh mục công khai cho Chợ Vật Tư trong app — chỉ hàng đang bán, không lộ hàng đã ẩn. */
+  danhSachDangBan(nhom?: string) {
+    const dieuKien: Record<string, unknown> = { dangBan: true };
+    if (nhom) dieuKien.nhom = nhom;
+    return this.model.find(dieuKien).sort({ createdAt: -1 }).exec();
+  }
+
+  async chiTietDangBan(id: string) {
+    const sp = await this.model.findOne({ _id: id, dangBan: true }).exec();
+    if (!sp) throw new NotFoundException('Không tìm thấy sản phẩm.');
+    return sp;
+  }
+
   /**
    * Trừ tồn kho nguyên tử — chỉ thành công nếu còn đủ hàng, tránh bán âm
    * khi nhiều đơn đặt cùng lúc. Dùng khi tạo đơn hàng ở Chợ Vật Tư.

@@ -50,9 +50,15 @@ describe('Chợ Vật Tư — giỏ hàng, địa chỉ, đặt đơn (đầu cu
     }
   });
 
-  it('từ chối khi chưa đăng nhập', async () => {
+  it('từ chối khi chưa đăng nhập (giỏ hàng/địa chỉ), nhưng danh mục sản phẩm công khai', async () => {
     await http.get('/api/v1/gio-hang').expect(401);
     await http.get('/api/v1/dia-chi').expect(401);
+
+    const res = await http.get('/api/v1/san-pham-dang-ban').expect(200);
+    expect(res.body.duLieu.find((sp: { _id: string }) => sp._id === sanPhamId)).toBeTruthy();
+
+    const chiTiet = await http.get(`/api/v1/san-pham-dang-ban/${sanPhamId}`).expect(200);
+    expect(chiTiet.body.duLieu.ten).toBe('Đất trồng thử');
   });
 
   it('giỏ hàng rỗng ban đầu', async () => {
