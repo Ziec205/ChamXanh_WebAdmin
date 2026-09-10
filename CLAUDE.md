@@ -11,14 +11,15 @@ Bản đã xuất bản: https://claude.ai/code/artifact/6516f057-caaa-4020-945d
 ## Trạng thái hiện tại
 
 **GĐ 0, GĐ 2, GĐ 3 xong. Web Admin đã hoàn thiện 100% menu. GĐ 1 xong phần không bị chặn.
-GĐ 5 đang chạy — nền tảng + xác thực mobile xong.**
+GĐ 5 đang chạy — nền tảng, xác thực, Vườn của tôi và khảo sát nhập môn trong app đã xong.**
 
-**81 kiểm thử đơn vị + 125 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+**81 kiểm thử đơn vị + 139 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
 lint và build sạch cả BE lẫn FE, kể cả `next build` production. Mobile: typecheck/lint sạch,
-`expo-doctor` 21/21, bundle Metro thành công.
+bundle Metro thành công.
 
-**Đã push lên GitHub**: ChamXanh_WebAdmin (10/09/2026, commit `0da6e82`), ChamXanh_Mobile
-(10/09/2026, commit `bff9fc1`). ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
+**CI GitHub Actions xanh THẬT trên cả hai repo** (đã tự tay xác nhận qua GitHub API, không chỉ
+tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `640f034`, ChamXanh_Mobile
+commit `de00a83`, cả hai 10/09/2026. ChamXanh_WebIntroduce (`d43bcee`) vẫn ở trạng thái GĐ 0.
 
 > **Lịch agent đám mây chưa tạo được:** API trả `HTTP 401 — Connect your GitHub account before
 > saving a routine that uses a GitHub repository`. Tài khoản Claude của người dùng chưa liên kết
@@ -86,18 +87,33 @@ lint và build sạch cả BE lẫn FE, kể cả `next build` production. Mobil
     5 tab (Trang chủ/Vườn/Trợ lý/Chợ/Cộng đồng), Cá nhân qua ảnh đại diện góc trên trái (đổi
     mật khẩu, đăng xuất, xoá tài khoản). `lib/api.ts` tự làm mới access token khi hết hạn.
     `lib/mau.ts` copy chính xác hệ màu từ `FE/src/app/globals.css`.
-  - Các tab Vườn/Trợ lý/Chợ/Cộng đồng còn là màn giữ chỗ — việc tiếp theo của GĐ 5 là dựng
-    Vườn của tôi (`user_plants`, `care_tasks`) và luồng khảo sát nhập môn ngay trong app.
+  - **Vá lỗ hổng nghiêm trọng**: `GET khao-sat/cau-hoi`, `GET/POST goi-y`, `GET cay-trong`,
+    `GET cay-trong/:ma` chưa từng đánh dấu `@Public()` — bị `JwtAuthGuard` (dành cho token Web
+    Admin) âm thầm chặn 401. App dùng token `jwt-app` hoàn toàn khác nên KHÔNG gọi được — tức
+    là khảo sát/gợi ý/danh mục cây, tính năng lõi nhất của GĐ 5, không hoạt động nếu không vá.
+    Phát hiện khi thử gọi thật lúc dựng màn Vườn, không phải qua test cũ (test cũ luôn dùng
+    token admin nên không lộ ra). `cay-trong/thong-ke` vẫn chỉ Admin.
+  - **Vườn của tôi** — module `vuon` (BE): `user_plants` + `care_tasks`, thêm cây tự sinh đủ 4
+    loại việc qua hàm thuần `sinhLichChamSoc()` đã có từ GĐ 2, hoàn thành việc tự dời hạn tính
+    từ NGÀY HOÀN THÀNH (không phải từ hạn cũ, tránh dồn việc nếu hoàn thành trễ). Dữ liệu riêng
+    của người dùng nên KHÔNG ghi `NhatKyService` — quy ước đó chỉ áp dụng cho hành động Admin.
+  - **Khảo sát nhập môn trong app** (`app/khao-sat/`): đọc câu hỏi ĐỘNG từ API, không hardcode
+    enum — Admin đổi câu hỏi trên Web Admin là app tự đổi theo. Kết quả gợi ý có nút "+ Thêm
+    vào vườn" gọi thẳng `POST vuon/cay`.
+  - Xác nhận toàn bộ luồng bằng smoke test thật (dựng MongoDB + BE thật, không phải chỉ unit
+    test): đăng ký → khảo sát công khai → gợi ý → thêm vào vườn → đúng 4 loại việc sinh ra →
+    hoàn thành việc dời hạn đúng.
+  - Tab Trợ lý/Chợ/Cộng đồng còn là màn giữ chỗ.
 
 ## Việc kế tiếp
 
-GĐ 5 đã xong lát cắt nền tảng + xác thực. Việc kế tiếp hợp lý: dựng **Vườn của tôi** trong
-app — collection `user_plants`/`care_tasks`/`care_guides`/`care_basket` ở BE (chưa có), màn
-khảo sát nhập môn nối API `/goi-y` đã sẵn từ GĐ 2, rồi màn Vườn hiển thị lịch chăm sóc. Sau khi
-Vườn dùng thật ổn định mới sang Trợ lý (GĐ 6) hoặc Chợ Vật Tư (GĐ 7). Song song có thể làm
-**GĐ 4 — web giới thiệu công khai** (đọc dữ liệu từ `/trang-gioi-thieu` đã có). Sau khi mobile
-và cộng đồng (GĐ 8) triển khai, quay lại đối chiếu schema `nguoi-dung`/`kiem-duyet`/`don-hang`
-ở Web Admin với dữ liệu thật thay vì suy đoán như hiện tại.
+GĐ 5 còn thiếu: Giỏ Chờ Chăm Sóc, hướng dẫn thao tác từng bước (`care_guides`), trồng xen canh,
+nhắc nhở qua push (Expo Push Notifications), và EAS dev build để test trên máy thật (Expo Go
+không đủ cho SecureStore ở một số bản, cần xác nhận). Sau đó mới sang Trợ lý (GĐ 6, cần API key
+Claude thật) hoặc Chợ Vật Tư (GĐ 7). Song song có thể làm **GĐ 4 — web giới thiệu công khai**
+(đọc dữ liệu từ `/trang-gioi-thieu` đã có). Sau khi mobile và cộng đồng (GĐ 8) triển khai, quay
+lại đối chiếu schema `nguoi-dung`/`kiem-duyet`/`don-hang` ở Web Admin với dữ liệu thật thay vì
+suy đoán như hiện tại.
 
 ### Còn bị chặn bởi phụ thuộc bên ngoài
 - Đăng nhập Google và Apple — cần tài khoản nhà phát triển
@@ -168,6 +184,8 @@ Trong `ChamXanh_Mobile/`:
 | Hệ màu (copy từ Web Admin, không tự đặt màu mới) | `lib/mau.ts` |
 | Điều hướng theo trạng thái đăng nhập (`Stack.Protected`) | `app/_layout.tsx` |
 | Khung 5 tab | `app/(tabs)/_layout.tsx` |
+| Khảo sát nhập môn (đọc câu hỏi động, gửi /goi-y) | `app/khao-sat/index.tsx` |
+| Vườn của tôi (danh sách cây + việc chăm sóc) | `app/(tabs)/vuon.tsx` |
 
 **Hàm thuần là chỗ đặt logic.** `cham-diem.ts` và `sinh-lich.ts` không đụng database, nên kiểm thử
 được đầy đủ trường hợp biên mà không cần dựng Mongo. Thêm luật mới thì thêm vào đó, đừng nhét
@@ -237,6 +255,7 @@ trong phiên này: build production (`next build`) rồi đọc action ID thật
 | Người dùng app | `GET nguoi-dung` · `GET nguoi-dung/:id` · `PATCH /:id/khoa` · `/:id/kich-hoat` |
 | Kiểm duyệt | `GET kiem-duyet` · `PATCH kiem-duyet/:id` |
 | Đơn hàng | `GET don-hang` · `GET don-hang/:id` · `PATCH don-hang/:id/trang-thai` |
+| Vườn của tôi (app) | `GET/POST vuon/cay` · `GET/DELETE vuon/cay/:id` · `GET vuon/viec-cham-soc` · `PATCH vuon/viec-cham-soc/:id/hoan-thanh` |
 | Sức khoẻ | `GET health` (công khai) |
 
 ---
@@ -440,6 +459,12 @@ Thiếu bất kỳ mục nào là bị từ chối, dù phần còn lại hoàn 
 - **Bán hàng thật cần vốn nhập hàng, kho, đóng gói, vận chuyển** — nhà trường tài trợ hạ tầng, không tài trợ tồn kho. Nên mở bán bằng nhóm hàng không hỏng: đất, phân, chậu, hạt giống, dụng cụ. Cây sống để sau.
 - **Xét duyệt tài khoản Apple mất 1–2 tuần** — GĐ 9 phụ thuộc hoàn toàn vào việc này.
 - **Cộng đồng chưa có thiết kế nào trong Figma** — phải thiết kế 6 màn mới, đưa vào Figma duyệt trước khi code.
+- **Test cục bộ xanh KHÔNG đồng nghĩa CI xanh.** CI của cả hai repo từng fail liên tục (FE Web
+  Admin: 9/9 lần đầu; Mobile: `npm ci` fail do lockfile lệch) mà không ai phát hiện, vì luôn tự
+  kiểm tra bằng lệnh khác lệnh CI thật dùng (`next lint` thay vì `eslint .`; `npm install` thay
+  vì `npm ci`). **Sau mỗi lần push, phải tự tra CI thật qua GitHub API**
+  (`curl https://api.github.com/repos/Ziec205/<repo>/actions/runs?per_page=1`) chờ tới khi
+  `status=completed`, không được coi việc push xong là hoàn tất.
 
 ---
 
