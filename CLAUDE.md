@@ -19,7 +19,7 @@ GĐ 0 sang có mã nguồn thật). Còn thiếu ở GĐ 5: EAS dev build để 
 khoản Expo). Còn thiếu ở GĐ 7: MoMo (chờ tài khoản merchant thật — xem quyết định của người
 dùng bên dưới).
 
-**88 kiểm thử đơn vị + 173 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
+**88 kiểm thử đơn vị + 174 kiểm thử đầu cuối (ChamXanh_WebAdmin) — tất cả xanh.** Typecheck,
 lint và build sạch cả BE lẫn FE, kể cả `next build` production và chạy thử `node dist/main.js`
 thật (không chỉ biên dịch) — bao gồm một lượt smoke test thật qua HTTP cho luồng Chợ Vật Tư
 (đăng ký → xem danh mục công khai → thêm giỏ → thêm địa chỉ → đặt đơn COD → tính tiền/trừ tồn
@@ -27,8 +27,18 @@ kho đúng → giỏ tự rỗng → xem lại đơn). Mobile: typecheck/lint s�
 Metro thành công (kể cả `expo export` thật cho Android, không chỉ biên dịch).
 
 **CI GitHub Actions xanh THẬT trên cả ba repo** (đã tự tay xác nhận qua GitHub API, không chỉ
-tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `fc41511`, ChamXanh_Mobile
+tin kết quả cục bộ — xem "Cạm bẫy đã biết"): ChamXanh_WebAdmin commit `e0fbfb3`, ChamXanh_Mobile
 commit `433bbc9`, ChamXanh_WebIntroduce commit `77e4306`, cả ba 10/09/2026.
+
+**Đã chạy kiểm thử tích hợp toàn hệ thống ngày 10/09/2026 — 72/72 mục đạt.** Dựng MongoDB +
+BE production thật, nhập 24 loài cây từ Excel, rồi chạy qua HTTP thật 14 nhóm: sức khoẻ/xác
+thực Admin, danh mục cây, khảo sát + thuật toán gợi ý (kể cả lọc cứng thú nuôi), xác thực app
+(gồm xoay vòng refresh token và vô hiệu token cũ), Vườn của tôi + sinh lịch, hướng dẫn chăm
+sóc, push token, Chợ Vật Tư trọn luồng đặt đơn, hết hàng + cô lập dữ liệu giữa người dùng,
+Admin đổi trạng thái đơn, nhật ký, cấu hình, web giới thiệu, xoá tài khoản. Kèm chạy thật cả
+Web Admin (16 trang render 200 sau khi đăng nhập thật qua Route Handler, cookie httpOnly đặt
+đúng) và web giới thiệu (trang chủ/bài viết/2 trang pháp lý/404/webhook revalidate).
+**Lượt kiểm thử này tìm ra một lỗi thật** đã sửa — xem `@IsEnum` ở "Cạm bẫy đã biết".
 
 **Quyết định GĐ 7 — thanh toán:** người dùng chọn chỉ làm COD/chuyển khoản trước, MoMo để sau
 khi có tài khoản merchant thật — không dựng khung giả lập trước vì tốn thời gian cho thứ chưa
@@ -577,6 +587,14 @@ Thiếu bất kỳ mục nào là bị từ chối, dù phần còn lại hoàn 
 - **Bán hàng thật cần vốn nhập hàng, kho, đóng gói, vận chuyển** — nhà trường tài trợ hạ tầng, không tài trợ tồn kho. Nên mở bán bằng nhóm hàng không hỏng: đất, phân, chậu, hạt giống, dụng cụ. Cây sống để sau.
 - **Xét duyệt tài khoản Apple mất 1–2 tuần** — GĐ 9 phụ thuộc hoàn toàn vào việc này.
 - **Cộng đồng chưa có thiết kế nào trong Figma** — phải thiết kế 6 màn mới, đưa vào Figma duyệt trước khi code.
+- **`@IsEnum()` KHÔNG dùng được với mảng `as const`** — phải dùng `@IsIn()`. Mọi hằng miền
+  nghiệp vụ trong `cay-trong.const.ts` (`NOI_DAT`, `MIEN`, `CONG_DUNG`, `NHOM_CAY`…) là mảng
+  `as const`, không phải TS enum. `@IsEnum` vẫn **chặn đúng** giá trị sai nên test "từ chối giá
+  trị không hợp lệ" vẫn xanh, nhưng thông báo lỗi in ra `"must be one of the following values: "`
+  với danh sách **rỗng** (nó đọc `Object.keys`, với mảng thì đó là chỉ số 0,1,2 và bị lọc hết).
+  Hệ quả: app mobile và Swagger không bao giờ biết giá trị nào hợp lệ. Chỉ dùng `@IsEnum` cho
+  TS enum thật (`AdminRole`, `TrangThaiDonHang`, `NhomSanPham`…). Lỗi này lọt lưới nhiều tháng
+  vì test cũ chỉ so tên trường trong thông báo, không so nội dung danh sách.
 - **Test cục bộ xanh KHÔNG đồng nghĩa CI xanh.** CI của cả hai repo từng fail liên tục (FE Web
   Admin: 9/9 lần đầu; Mobile: `npm ci` fail do lockfile lệch) mà không ai phát hiện, vì luôn tự
   kiểm tra bằng lệnh khác lệnh CI thật dùng (`next lint` thay vì `eslint .`; `npm install` thay
