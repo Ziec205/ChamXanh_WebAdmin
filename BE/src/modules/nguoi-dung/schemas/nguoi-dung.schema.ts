@@ -40,6 +40,10 @@ export class NguoiDung {
 
   @Prop({ type: Date, default: null })
   khoaToi!: Date | null;
+
+  /** Token thiết bị của Expo Push — rỗng nghĩa là chưa cấp quyền/chưa đăng ký. */
+  @Prop({ trim: true, default: '' })
+  expoPushToken!: string;
 }
 
 export const NguoiDungSchema = SchemaFactory.createForClass(NguoiDung);

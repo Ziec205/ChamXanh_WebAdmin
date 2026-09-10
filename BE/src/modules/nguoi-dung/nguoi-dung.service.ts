@@ -70,6 +70,15 @@ export class NguoiDungService {
     await this.model.deleteOne({ _id: id }).exec();
   }
 
+  async luuPushToken(id: string, expoPushToken: string): Promise<void> {
+    await this.model.updateOne({ _id: id }, { expoPushToken }).exec();
+  }
+
+  /** Người dùng có bật thông báo và đang hoạt động — dùng cho tác vụ gửi nhắc nhở hằng ngày. */
+  danhSachCoPushToken() {
+    return this.model.find({ expoPushToken: { $ne: '' }, dangHoatDong: true }).exec();
+  }
+
   async danhSach(loc: { email?: string; trang?: number; moiTrang?: number }) {
     const dieuKien: FilterQuery<NguoiDungDocument> = {};
     if (loc.email) dieuKien.email = { $regex: loc.email, $options: 'i' };

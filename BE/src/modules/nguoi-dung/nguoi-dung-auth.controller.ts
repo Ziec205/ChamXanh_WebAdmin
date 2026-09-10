@@ -2,11 +2,13 @@ import { Body, Controller, Delete, Get, Headers, HttpCode, HttpStatus, Post, Use
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { NguoiDungAuthService } from './nguoi-dung-auth.service';
+import { NguoiDungService } from './nguoi-dung.service';
 import { DangKyDto } from './dto/dang-ky.dto';
 import { DangNhapAppDto } from './dto/dang-nhap-app.dto';
 import { LamMoiAppDto } from './dto/lam-moi-app.dto';
 import { DoiMatKhauAppDto } from './dto/doi-mat-khau-app.dto';
 import { XoaTaiKhoanDto } from './dto/xoa-tai-khoan.dto';
+import { DangKyPushTokenDto } from './dto/dang-ky-push-token.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { JwtAppAuthGuard } from './guards/jwt-app-auth.guard';
 import { CurrentAppUser, type AuthenticatedAppUser } from './guards/current-app-user.decorator';
@@ -19,7 +21,10 @@ import { CurrentAppUser, type AuthenticatedAppUser } from './guards/current-app-
 @ApiTags('Xác thực người dùng app')
 @Controller('auth-app')
 export class NguoiDungAuthController {
-  constructor(private readonly auth: NguoiDungAuthService) {}
+  constructor(
+    private readonly auth: NguoiDungAuthService,
+    private readonly nguoiDungService: NguoiDungService,
+  ) {}
 
   @Public()
   @Post('dang-ky')
@@ -85,6 +90,15 @@ export class NguoiDungAuthController {
   })
   async xoaTaiKhoan(@CurrentAppUser('id') id: string, @Body() dto: XoaTaiKhoanDto) {
     await this.auth.xoaTaiKhoan(id, dto.matKhau);
+  }
+
+  @Public()
+  @UseGuards(JwtAppAuthGuard)
+  @Post('dang-ky-push-token')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Lưu token Expo Push của thiết bị — dùng để gửi nhắc nhở chăm sóc' })
+  async dangKyPushToken(@CurrentAppUser('id') id: string, @Body() dto: DangKyPushTokenDto) {
+    await this.nguoiDungService.luuPushToken(id, dto.expoPushToken);
   }
 
   @Public()

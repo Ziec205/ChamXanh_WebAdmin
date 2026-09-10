@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import configuration from './config/configuration';
 import { validateEnv } from './config/env.validation';
@@ -23,6 +24,7 @@ import { DonHangModule } from './modules/don-hang/don-hang.module';
 import { VuonModule } from './modules/vuon/vuon.module';
 import { HuongDanChamSocModule } from './modules/huong-dan-cham-soc/huong-dan-cham-soc.module';
 import { GioChoChamSocModule } from './modules/gio-cho-cham-soc/gio-cho-cham-soc.module';
+import { ThongBaoModule } from './modules/thong-bao/thong-bao.module';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { RolesGuard } from './common/guards/roles.guard';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
@@ -70,6 +72,9 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
     VuonModule,
     HuongDanChamSocModule,
     GioChoChamSocModule,
+    ThongBaoModule,
+    // Bỏ qua khi kiểm thử — không để tác vụ cron chạy song song với dữ liệu test.
+    ...(process.env.NODE_ENV === 'test' ? [] : [ScheduleModule.forRoot()]),
   ],
   providers: [
     // Thứ tự quan trọng: chặn tần suất → xác thực → phân quyền.
